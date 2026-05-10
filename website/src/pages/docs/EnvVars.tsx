@@ -3,7 +3,6 @@ import MarkdownDoc, { DocStyles } from '../../components/MarkdownDoc'
 const toc = [
   { id: 'required', text: '必需变量', level: 2 as const },
   { id: 'model', text: '模型配置', level: 2 as const },
-  { id: 'proxy', text: '代理配置', level: 2 as const },
   { id: 'debug', text: '调试选项', level: 2 as const },
   { id: 'advanced', text: '高级配置', level: 2 as const },
 ]
@@ -33,14 +32,6 @@ export default function EnvVars() {
       <tbody>{rows([
         ['ANTHROPIC_MODEL', '可选', '默认模型。可选：claude-sonnet-4-6, claude-opus-4-6, deepseek-v4-pro 等'],
         ['ANTHROPIC_SMALL_FAST_MODEL', '可选', '快速任务模型，默认 claude-haiku-4-5'],
-      ])}</tbody></table>
-
-      <h2 id="proxy">代理配置</h2>
-      <table><thead><tr><th>变量名</th><th>必需</th><th>说明</th></tr></thead>
-      <tbody>{rows([
-        ['HTTP_PROXY', '可选', 'HTTP 代理地址，如 http://proxy:8080'],
-        ['HTTPS_PROXY', '可选', 'HTTPS 代理地址'],
-        ['NO_PROXY', '可选', '跳过代理的地址列表，逗号分隔'],
       ])}</tbody></table>
 
       <h2 id="debug">调试选项</h2>
