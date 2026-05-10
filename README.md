@@ -23,8 +23,6 @@
 
 ---
 
-## 截图
-
 ![MiniClaude 运行截图](assets/screenshot.png)
 
 ---
