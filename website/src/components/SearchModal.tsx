@@ -4,6 +4,7 @@ import { searchIndex } from '../lib/navData'
 import MiniSearch from 'minisearch'
 
 const miniSearch = new MiniSearch({
+  idField: 'path',
   fields: ['title', 'content'],
   storeFields: ['title', 'path', 'section'],
   searchOptions: {
