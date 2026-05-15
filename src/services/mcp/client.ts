@@ -256,6 +256,16 @@ import { jsonParse, jsonStringify } from '../../utils/slowOperations.js'
 
 const MCP_AUTH_CACHE_TTL_MS = 15 * 60 * 1000 // 15 min
 
+/**
+ * Tracks in-flight MCP tool calls so they can be aborted when a transport
+ * disconnects, preventing indefinite hangs on SSE/HTTP transports.
+ */
+const pendingToolCalls = new Map<
+  string,
+  { serverName: string; abortController: AbortController }
+>()
+let pendingToolCallId = 0
+
 type McpAuthCacheData = Record<string, { timestamp: number }>
 
 function getMcpAuthCachePath(): string {
@@ -1401,6 +1411,21 @@ export const connectToServer = memoize(
         if (originalOnclose) {
           originalOnclose()
         }
+      }
+
+      // When the transport closes (server disconnect, network failure), abort
+      // pending tool calls so they fail fast instead of hanging indefinitely.
+      const origTransportOnClose = transport.onclose
+      transport.onclose = () => {
+        logMCPError(name, `MCP transport closed for server ${name}`)
+        for (const [, pending] of pendingToolCalls) {
+          if (pending.serverName === name) {
+            pending.abortController.abort(
+              new Error(`MCP server ${name} disconnected`),
+            )
+          }
+        }
+        origTransportOnClose?.()
       }
 
       const cleanup = async () => {
@@ -3049,6 +3074,7 @@ async function callMCPTool({
 }> {
   const toolStartTime = Date.now()
   let progressInterval: NodeJS.Timeout | undefined
+  const callId = `mcp-call-${pendingToolCallId++}`
 
   try {
     logMCPDebug(name, `Calling MCP tool: ${tool}`)
@@ -3077,6 +3103,11 @@ async function callMCPTool({
     // state from being shared across calls, which could cause one call's
     // response to silently disarm another call's watchdog.
     const callAbortController = createAbortController()
+    // Register so transport.onclose can abort this call on disconnect
+    pendingToolCalls.set(callId, {
+      serverName: name,
+      abortController: callAbortController,
+    })
     // Propagate parent (user-initiated) cancellation to the per-call controller
     if (signal.aborted) {
       callAbortController.abort(signal.reason)
@@ -3261,6 +3292,9 @@ async function callMCPTool({
     }
     return { content: undefined }
   } finally {
+    // Remove from pending tracking (the transport.onclose handler
+    // may have already deleted this entry — Map.delete is idempotent)
+    pendingToolCalls.delete(callId)
     // Always clear intervals
     if (progressInterval !== undefined) {
       clearInterval(progressInterval)
