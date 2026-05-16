@@ -23,41 +23,49 @@ function ProviderSwitch({
   onDone,
   providerName,
   provider,
+  sessionOnly,
 }: {
   onDone: (message: string) => void
   providerName: string
   provider: ProviderConfig
+  sessionOnly: boolean
 }) {
   const setAppState = useSetAppState()
 
   React.useEffect(() => {
-    // Build settings update
-    const settingsUpdate: Record<string, unknown> = {
-      env: provider.env,
-    }
-
-    if (provider.model) {
-      settingsUpdate.model = provider.model
-    }
-
-    if (provider.defaultModels) {
-      const models: Record<string, string> = {}
-      if (provider.defaultModels.sonnet) models.sonnet = provider.defaultModels.sonnet
-      if (provider.defaultModels.haiku) models.haiku = provider.defaultModels.haiku
-      if (provider.defaultModels.opus) models.opus = provider.defaultModels.opus
-      if (Object.keys(models).length > 0) {
-        settingsUpdate.defaultModels = models
+    if (sessionOnly) {
+      // Session-only: inject env vars directly into process.env without writing to disk.
+      // Only affects the current window, not other sessions.
+      Object.assign(process.env, provider.env)
+    } else {
+      // Global: persist to settings.json for all windows
+      const settingsUpdate: Record<string, unknown> = {
+        env: provider.env,
       }
-    }
 
-    const result = updateSettingsForSource('userSettings', settingsUpdate as any)
-    if (result.error) {
-      onDone(`Failed to switch provider: ${result.error.message}`)
-      return
-    }
+      if (provider.model) {
+        settingsUpdate.model = provider.model
+      }
 
-    // Hot-reload env vars into process.env so next API call uses new endpoint
-    applyConfigEnvironmentVariables()
+      if (provider.defaultModels) {
+        const models: Record<string, string> = {}
+        if (provider.defaultModels.sonnet) models.sonnet = provider.defaultModels.sonnet
+        if (provider.defaultModels.haiku) models.haiku = provider.defaultModels.haiku
+        if (provider.defaultModels.opus) models.opus = provider.defaultModels.opus
+        if (Object.keys(models).length > 0) {
+          settingsUpdate.defaultModels = models
+        }
+      }
+
+      const result = updateSettingsForSource('userSettings', settingsUpdate as any)
+      if (result.error) {
+        onDone(`Failed to switch provider: ${result.error.message}`)
+        return
+      }
+
+      // Hot-reload env vars so next API call uses the new endpoint
+      applyConfigEnvironmentVariables()
+    }
 
     // Update HUD model display
     if (provider.model) {
@@ -73,9 +81,10 @@ function ProviderSwitch({
       model: provider.model as any,
     })
 
+    const scope = sessionOnly ? ' (this session only)' : ''
     const desc = provider.description ? ` (${provider.description})` : ''
     onDone(
-      `Switched to ${chalk.bold(providerName)}${desc}\n` +
+      `Switched to ${chalk.bold(providerName)}${desc}${scope}\n` +
         `  model: ${chalk.bold(provider.model || 'N/A')}\n` +
         `  base_url: ${provider.env.ANTHROPIC_BASE_URL || 'N/A'}`,
     )
@@ -112,7 +121,18 @@ function ProviderList({
 }
 
 export const call: LocalJSXCommandCall = async (onDone, _context, args) => {
-  const trimmed = args?.trim() || ''
+  const raw = args?.trim() || ''
+
+  // Parse --session flag for session-only switch
+  let sessionOnly = false
+  let providerArg = raw
+  if (raw.includes('--session')) {
+    sessionOnly = true
+    providerArg = raw.replace('--session', '').trim()
+  } else if (raw.includes('-s')) {
+    sessionOnly = true
+    providerArg = raw.replace('-s', '').trim()
+  }
 
   const userSettings = getSettingsForSource('userSettings')
   const providers = (userSettings?.providers ||
@@ -132,14 +152,14 @@ export const call: LocalJSXCommandCall = async (onDone, _context, args) => {
     return
   }
 
-  if (!trimmed) {
+  if (!providerArg) {
     return <ProviderList onDone={onDone} providers={providers} />
   }
 
-  const provider = providers[trimmed]
+  const provider = providers[providerArg]
   if (!provider) {
     onDone(
-      `Unknown provider "${trimmed}". Available: ${Object.keys(providers).join(', ')}`,
+      `Unknown provider "${providerArg}". Available: ${Object.keys(providers).join(', ')}`,
     )
     return
   }
@@ -147,8 +167,9 @@ export const call: LocalJSXCommandCall = async (onDone, _context, args) => {
   return (
     <ProviderSwitch
       onDone={onDone}
-      providerName={trimmed}
+      providerName={providerArg}
       provider={provider}
+      sessionOnly={sessionOnly}
     />
   )
 }
