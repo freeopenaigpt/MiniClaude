@@ -726,9 +726,9 @@ export const hasPermissionsToUseTool: CanUseToolFn = async (
       const classifierCostUSD =
         classifierResult.usage && classifierResult.model
           ? calculateCostFromTokens(
-              classifierResult.model,
-              classifierResult.usage,
-            )
+            classifierResult.model,
+            classifierResult.usage,
+          )
           : undefined
       logEvent('tengu_auto_mode_decision', {
         decision:
@@ -786,9 +786,9 @@ export const hasPermissionsToUseTool: CanUseToolFn = async (
         classifierStage1CostUSD:
           classifierResult.stage1Usage && classifierResult.model
             ? calculateCostFromTokens(
-                classifierResult.model,
-                classifierResult.stage1Usage,
-              )
+              classifierResult.model,
+              classifierResult.stage1Usage,
+            )
             : undefined,
         classifierStage2InputTokens: classifierResult.stage2Usage?.inputTokens,
         classifierStage2OutputTokens:
@@ -805,9 +805,9 @@ export const hasPermissionsToUseTool: CanUseToolFn = async (
         classifierStage2CostUSD:
           classifierResult.stage2Usage && classifierResult.model
             ? calculateCostFromTokens(
-                classifierResult.model,
-                classifierResult.stage2Usage,
-              )
+              classifierResult.model,
+              classifierResult.stage2Usage,
+            )
             : undefined,
       })
 
@@ -1141,7 +1141,7 @@ export async function checkRuleBasedPermissions(
     return toolPermissionResult
   }
 
-  // 1g. Safety checks (e.g. .git/, .claude/, .vscode/, shell configs) are
+  // 1g. Safety checks (e.g. .git/, .miniClaude/, .vscode/, shell configs) are
   // bypass-immune — they must prompt even when a PreToolUse hook returned
   // allow. checkPathSafetyForAutoEdit returns {type:'safetyCheck'} for these.
   if (
@@ -1249,7 +1249,7 @@ async function hasPermissionsToUseToolInner(
     return toolPermissionResult
   }
 
-  // 1g. Safety checks (e.g. .git/, .claude/, .vscode/, shell configs) are
+  // 1g. Safety checks (e.g. .git/, .miniClaude/, .vscode/, shell configs) are
   // bypass-immune — they must prompt even in bypassPermissions mode.
   // checkPathSafetyForAutoEdit returns {type:'safetyCheck'} for these paths.
   if (
@@ -1300,13 +1300,13 @@ async function hasPermissionsToUseToolInner(
   const result: PermissionDecision =
     toolPermissionResult.behavior === 'passthrough'
       ? {
-          ...toolPermissionResult,
-          behavior: 'ask' as const,
-          message: createPermissionRequestMessage(
-            tool.name,
-            toolPermissionResult.decisionReason,
-          ),
-        }
+        ...toolPermissionResult,
+        behavior: 'ask' as const,
+        message: createPermissionRequestMessage(
+          tool.name,
+          toolPermissionResult.decisionReason,
+        ),
+      }
       : toolPermissionResult
 
   if (result.behavior === 'ask' && result.suggestions) {

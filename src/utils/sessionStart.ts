@@ -69,11 +69,11 @@ export async function processSessionStartHooks(
       const enhancedError =
         error instanceof Error
           ? new Error(
-              `Failed to load plugin hooks during ${source}: ${error.message}`,
-            )
+            `Failed to load plugin hooks during ${source}: ${error.message}`,
+          )
           : new Error(
-              `Failed to load plugin hooks during ${source}: ${String(error)}`,
-            )
+            `Failed to load plugin hooks during ${source}: ${String(error)}`,
+          )
       /* eslint-enable no-restricted-syntax */
 
       if (error instanceof Error && error.stack) {
@@ -101,7 +101,7 @@ export async function processSessionStartHooks(
         errorMessage.includes('EPERM')
       ) {
         userGuidance =
-          'This appears to be a permissions issue. Check file permissions on ~/.claude/plugins/'
+          'This appears to be a permissions issue. Check file permissions on ~/.miniClaude/plugins/'
       } else if (
         errorMessage.includes('Invalid') ||
         errorMessage.includes('parse') ||
@@ -109,7 +109,7 @@ export async function processSessionStartHooks(
         errorMessage.includes('schema')
       ) {
         userGuidance =
-          'This appears to be a configuration issue. Check your plugin settings in .claude/settings.json'
+          'This appears to be a configuration issue. Check your plugin settings in .miniClaude/settings.json'
       } else {
         userGuidance =
           'Please fix the plugin configuration or remove problematic plugins from your settings.'
@@ -117,12 +117,12 @@ export async function processSessionStartHooks(
 
       logForDebugging(
         `Warning: Failed to load plugin hooks. SessionStart hooks from plugins will not execute. ` +
-          `Error: ${errorMessage}. ${userGuidance}`,
+        `Error: ${errorMessage}. ${userGuidance}`,
         { level: 'warn' },
       )
 
       // Continue execution - plugin hooks won't be available, but project-level hooks
-      // from .claude/settings.json (loaded via captureHooksConfigSnapshot) will still work
+      // from .miniClaude/settings.json (loaded via captureHooksConfigSnapshot) will still work
     }
   }
 

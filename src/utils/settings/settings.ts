@@ -232,7 +232,7 @@ function parseSettingsFileUncached(path: string): {
 
 /**
  * Get the absolute path to the associated file root for a given settings source
- * (e.g. for $PROJ_DIR/.claude/settings.json, returns $PROJ_DIR)
+ * (e.g. for $PROJ_DIR/.miniClaude/settings.json, returns $PROJ_DIR)
  * @param source The source of the settings
  * @returns The root path of the settings file
  */
@@ -300,9 +300,9 @@ export function getRelativeSettingsFilePathForSource(
 ): string {
   switch (source) {
     case 'projectSettings':
-      return join('.claude', 'settings.json')
+      return join('.miniClaude', 'settings.json')
     case 'localSettings':
-      return join('.claude', 'settings.local.json')
+      return join('.miniClaude', 'settings.local.json')
   }
 }
 
@@ -935,11 +935,11 @@ export function getUseAutoModeDuringPlan(): boolean {
  */
 export function getAutoModeConfig():
   | {
-      allow?: string[]
-      soft_deny?: string[]
-      hard_deny?: string[]
-      environment?: string[]
-    }
+    allow?: string[]
+    soft_deny?: string[]
+    hard_deny?: string[]
+    environment?: string[]
+  }
   | undefined {
   if (feature('TRANSCRIPT_CLASSIFIER')) {
     const schema = z.object({

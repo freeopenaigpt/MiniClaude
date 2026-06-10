@@ -644,11 +644,11 @@ const PluginManifestUserConfigSchema = lazySchema(() =>
       .optional()
       .describe(
         'User-configurable values this plugin needs. Prompted at enable time. ' +
-          'Non-sensitive values saved to settings.json; sensitive values to secure storage ' +
-          '(macOS keychain or .credentials.json). Available as ${user_config.KEY} in ' +
-          'MCP/LSP server config, hook commands, and (non-sensitive only) skill/agent content. ' +
-          'Note: sensitive values share a single keychain entry with OAuth tokens — keep ' +
-          'secret counts small to stay under the ~2KB stdin-safe limit (see INC-3028).',
+        'Non-sensitive values saved to settings.json; sensitive values to secure storage ' +
+        '(macOS keychain or .credentials.json). Available as ${user_config.KEY} in ' +
+        'MCP/LSP server config, hook commands, and (non-sensitive only) skill/agent content. ' +
+        'Note: sensitive values share a single keychain entry with OAuth tokens — keep ' +
+        'secret counts small to stay under the ~2KB stdin-safe limit (see INC-3028).',
       ),
   }),
 )
@@ -690,14 +690,14 @@ const PluginManifestChannelsSchema = lazySchema(() =>
               .optional()
               .describe(
                 'Fields to prompt the user for when enabling this plugin in assistant mode. ' +
-                  'Saved values are substituted into ${user_config.KEY} references in the mcpServers env.',
+                'Saved values are substituted into ${user_config.KEY} references in the mcpServers env.',
               ),
           })
           .strict(),
       )
       .describe(
         'Channels this plugin provides. Each entry declares an MCP server as a message channel ' +
-          'and optionally specifies user configuration to prompt for at enable time.',
+        'and optionally specifies user configuration to prompt for at enable time.',
       ),
   }),
 )
@@ -861,7 +861,7 @@ const PluginManifestSettingsSchema = lazySchema(() =>
       .optional()
       .describe(
         'Settings to merge when plugin is enabled. ' +
-          'Only allowlisted keys are kept (currently: agent)',
+        'Only allowlisted keys are kept (currently: agent)',
       ),
   }),
 )
@@ -926,16 +926,16 @@ export const MarketplaceSourceSchema = lazySchema(() =>
         .string()
         .optional()
         .describe(
-          'Path to marketplace.json within repo (defaults to .claude-plugin/marketplace.json)',
+          'Path to marketplace.json within repo (defaults to .miniClaude-plugin/marketplace.json)',
         ),
       sparsePaths: z
         .array(z.string())
         .optional()
         .describe(
           'Directories to include via git sparse-checkout (cone mode). ' +
-            'Use for monorepos where the marketplace lives in a subdirectory. ' +
-            'Example: [".claude-plugin", "plugins"]. ' +
-            'If omitted, the full repository is cloned.',
+          'Use for monorepos where the marketplace lives in a subdirectory. ' +
+          'Example: [".miniClaude-plugin", "plugins"]. ' +
+          'If omitted, the full repository is cloned.',
         ),
     }),
     z.object({
@@ -958,16 +958,16 @@ export const MarketplaceSourceSchema = lazySchema(() =>
         .string()
         .optional()
         .describe(
-          'Path to marketplace.json within repo (defaults to .claude-plugin/marketplace.json)',
+          'Path to marketplace.json within repo (defaults to .miniClaude-plugin/marketplace.json)',
         ),
       sparsePaths: z
         .array(z.string())
         .optional()
         .describe(
           'Directories to include via git sparse-checkout (cone mode). ' +
-            'Use for monorepos where the marketplace lives in a subdirectory. ' +
-            'Example: [".claude-plugin", "plugins"]. ' +
-            'If omitted, the full repository is cloned.',
+          'Use for monorepos where the marketplace lives in a subdirectory. ' +
+          'Example: [".miniClaude-plugin", "plugins"]. ' +
+          'If omitted, the full repository is cloned.',
         ),
     }),
     z.object({
@@ -984,7 +984,7 @@ export const MarketplaceSourceSchema = lazySchema(() =>
       source: z.literal('directory'),
       path: z
         .string()
-        .describe('Local directory containing .claude-plugin/marketplace.json'),
+        .describe('Local directory containing .miniClaude-plugin/marketplace.json'),
     }),
     z.object({
       source: z.literal('hostPattern'),
@@ -992,9 +992,9 @@ export const MarketplaceSourceSchema = lazySchema(() =>
         .string()
         .describe(
           'Regex pattern to match the host/domain extracted from any marketplace source type. ' +
-            'For github sources, matches against "github.com". For git sources (SSH or HTTPS), ' +
-            'extracts the hostname from the URL. Use in strictKnownMarketplaces to allow all ' +
-            'marketplaces from a specific host (e.g., "^github\\.mycompany\\.com$").',
+          'For github sources, matches against "github.com". For git sources (SSH or HTTPS), ' +
+          'extracts the hostname from the URL. Use in strictKnownMarketplaces to allow all ' +
+          'marketplaces from a specific host (e.g., "^github\\.mycompany\\.com$").',
         ),
     }),
     z.object({
@@ -1003,10 +1003,10 @@ export const MarketplaceSourceSchema = lazySchema(() =>
         .string()
         .describe(
           'Regex pattern matched against the .path field of file and directory sources. ' +
-            'Use in strictKnownMarketplaces to allow filesystem-based marketplaces alongside ' +
-            'hostPattern restrictions for network sources. Use ".*" to allow all filesystem ' +
-            'paths, or a narrower pattern (e.g., "^/opt/approved/") to restrict to specific ' +
-            'directories.',
+          'Use in strictKnownMarketplaces to allow filesystem-based marketplaces alongside ' +
+          'hostPattern restrictions for network sources. Use ".*" to allow all filesystem ' +
+          'paths, or a narrower pattern (e.g., "^/opt/approved/") to restrict to specific ' +
+          'directories.',
         ),
     }),
     z
@@ -1025,9 +1025,9 @@ export const MarketplaceSourceSchema = lazySchema(() =>
           )
           .describe(
             'Marketplace name. Must match the extraKnownMarketplaces key (enforced); ' +
-              'the synthetic manifest is written under this name. Same validation ' +
-              'as PluginMarketplaceSchema plus reserved-name rejection \u2014 ' +
-              'validateOfficialNameSource runs after the disk write, too late to clean up.',
+            'the synthetic manifest is written under this name. Same validation ' +
+            'as PluginMarketplaceSchema plus reserved-name rejection \u2014 ' +
+            'validateOfficialNameSource runs after the disk write, too late to clean up.',
           ),
         plugins: z
           .array(SettingsMarketplacePluginSchema())
@@ -1036,9 +1036,9 @@ export const MarketplaceSourceSchema = lazySchema(() =>
       })
       .describe(
         'Inline marketplace manifest defined directly in settings.json. ' +
-          'The reconciler writes a synthetic marketplace.json to the cache; ' +
-          'diffMarketplaces detects edits via isEqual on the stored source ' +
-          '(the plugins array is inside this object, so edits surface as sourceChanged).',
+        'The reconciler writes a synthetic marketplace.json to the cache; ' +
+        'diffMarketplaces detects edits via isEqual on the stored source ' +
+        '(the plugins array is inside this object, so edits surface as sourceChanged).',
       ),
   ]),
 )
@@ -1062,7 +1062,7 @@ export const gitSha = lazySchema(() =>
 export const PluginSourceSchema = lazySchema(() =>
   z.union([
     RelativePath().describe(
-      'Path to the plugin root, relative to the marketplace root (the directory containing .claude-plugin/, not .claude-plugin/ itself)',
+      'Path to the plugin root, relative to the marketplace root (the directory containing .miniClaude-plugin/, not .miniClaude-plugin/ itself)',
     ),
     z
       .object({
@@ -1141,7 +1141,7 @@ export const PluginSourceSchema = lazySchema(() =>
           .min(1)
           .describe(
             'Subdirectory within the repo containing the plugin (e.g., "tools/claude-plugin"). ' +
-              'Cloned sparsely using partial clone (--filter=tree:0) to minimize bandwidth for monorepos.',
+            'Cloned sparsely using partial clone (--filter=tree:0) to minimize bandwidth for monorepos.',
           ),
         ref: z
           .string()
@@ -1153,7 +1153,7 @@ export const PluginSourceSchema = lazySchema(() =>
       })
       .describe(
         'Plugin located in a subdirectory of a larger repository (monorepo). ' +
-          'Only the specified subdirectory is materialized; the rest of the repo is not downloaded.',
+        'Only the specified subdirectory is materialized; the rest of the repo is not downloaded.',
       ),
     // TODO (future work) gist
     // TODO (future work) single file?
@@ -1192,7 +1192,7 @@ const SettingsMarketplacePluginSchema = lazySchema(() =>
         .describe('Plugin name as it appears in the target repository'),
       source: PluginSourceSchema().describe(
         'Where to fetch the plugin from. Must be a remote source — relative ' +
-          'paths have no marketplace repository to resolve against.',
+        'paths have no marketplace repository to resolve against.',
       ),
       description: z.string().optional(),
       version: z.string().optional(),
@@ -1440,7 +1440,7 @@ export const SettingsPluginEntrySchema = lazySchema(() =>
  *   "version": "1.2.0",
  *   "installedAt": "2024-01-15T10:30:00Z",
  *   "marketplace": "anthropic-tools",
- *   "installPath": "/home/user/.claude/plugins/installed/anthropic-tools/code-formatter"
+ *   "installPath": "/home/user/.miniClaude/plugins/installed/anthropic-tools/code-formatter"
  * }
  */
 export const InstalledPluginSchema = lazySchema(() =>
@@ -1496,9 +1496,9 @@ export const InstalledPluginsFileSchemaV1 = lazySchema(() =>
  *
  * Plugins can be installed at different scopes:
  * - managed: Enterprise/system-wide (read-only, platform-specific paths)
- * - user: User's global settings (~/.claude/settings.json)
- * - project: Shared project settings ($project/.claude/settings.json)
- * - local: Personal project overrides ($project/.claude/settings.local.json)
+ * - user: User's global settings (~/.miniClaude/settings.json)
+ * - project: Shared project settings ($project/.miniClaude/settings.json)
+ * - local: Personal project overrides ($project/.miniClaude/settings.local.json)
  *
  * Note: 'flag' scope plugins (from --settings) are session-only and
  * are NOT persisted to installed_plugins.json.
@@ -1585,7 +1585,7 @@ export const InstalledPluginsFileSchema = lazySchema(() =>
  * Example entry:
  * {
  *   "source": { "source": "github", "repo": "anthropic/claude-plugins" },
- *   "installLocation": "/home/user/.claude/plugins/cached/marketplaces/anthropic-tools",
+ *   "installLocation": "/home/user/.miniClaude/plugins/cached/marketplaces/anthropic-tools",
  *   "lastUpdated": "2024-01-15T10:30:00Z"
  * }
  */

@@ -57,11 +57,11 @@ bun run build
 
 ### Configuration
 
-MiniClaude is fully compatible with Claude Code's config system. Use `~/.claude/settings.json` for centralized management.
+MiniClaude is fully compatible with Claude Code's config system. Use `~/.miniClaude/settings.json` for centralized management.
 
 | Method | Path | Use Case |
 |--------|------|----------|
-| **settings.json (recommended)** | `~/.claude/settings.json` | Global config, multi-provider hot-switch |
+| **settings.json (recommended)** | `~/.miniClaude/settings.json` | Global config, multi-provider hot-switch |
 | **.env** | Project root `.env` | Dev/debug, temporary overrides |
 
 **Recommended: settings.json**
@@ -69,9 +69,9 @@ MiniClaude is fully compatible with Claude Code's config system. Use `~/.claude/
 Copy the template and edit:
 
 ```bash
-cp settings.example.json ~/.claude/settings.json
-# Linux/macOS: ~/.claude/settings.json
-# Windows:     C:\Users\<username>\.claude\settings.json
+cp settings.example.json ~/.miniClaude/settings.json
+# Linux/macOS: ~/.miniClaude/settings.json
+# Windows:     C:\Users\<username>\.miniClaude\settings.json
 ```
 
 Minimal config (DeepSeek example):

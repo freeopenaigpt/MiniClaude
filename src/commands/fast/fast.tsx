@@ -181,8 +181,8 @@ export function FastModePicker(t0) {
   let t10;
   if ($[22] !== enableFastMode || $[23] !== unavailableReason) {
     t10 = unavailableReason ? <Box marginLeft={2}><Text color="error">{unavailableReason}</Text></Box> : <><Box flexDirection="column" gap={0} marginLeft={2}><Box flexDirection="row" gap={2}><Text bold={true}>Fast mode</Text><Text color={enableFastMode ? "fastMode" : undefined} bold={enableFastMode}>{enableFastMode ? "ON " : "OFF"}</Text><Text dimColor={true}>{pricing}</Text></Box></Box>{isCooldown && runtimeState.status === "cooldown" && <Box marginLeft={2}><Text color="warning">{runtimeState.reason === "overloaded" ? "Fast mode overloaded and is temporarily unavailable" : "You've hit your fast limit"}{" \xB7 resets in "}{formatDuration(runtimeState.resetAt - Date.now(), {
-            hideTrailingZeros: true
-          })}</Text></Box>}</>;
+      hideTrailingZeros: true
+    })}</Text></Box>}</>;
     $[22] = enableFastMode;
     $[23] = unavailableReason;
     $[24] = t10;
@@ -191,7 +191,7 @@ export function FastModePicker(t0) {
   }
   let t11;
   if ($[25] === Symbol.for("react.memo_cache_sentinel")) {
-    t11 = <Text dimColor={true}>Learn more:{" "}<Link url="https://code.claude.com/docs/en/fast-mode">https://code.claude.com/docs/en/fast-mode</Link></Text>;
+    t11 = <Text dimColor={true}>Learn more:{" "}<Link url="https://code.miniClaude.com/docs/en/fast-mode">https://code.miniClaude.com/docs/en/fast-mode</Link></Text>;
     $[25] = t11;
   } else {
     t11 = $[25];

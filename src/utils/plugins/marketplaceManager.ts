@@ -8,13 +8,13 @@
  * - Track and update marketplace configurations
  *
  * File structure managed by this module:
- * ~/.claude/
+ * ~/.miniClaude/
  *   └── plugins/
  *       ├── known_marketplaces.json    # Configuration of all known marketplaces
  *       └── marketplaces/              # Cache directory for marketplace data
  *           ├── my-marketplace.json    # Cached marketplace from URL source
  *           └── github-marketplace/    # Cloned repository for GitHub source
- *               └── .claude-plugin/
+ *               └── .miniClaude-plugin/
  *                   └── marketplace.json
  */
 
@@ -240,7 +240,7 @@ export function saveMarketplaceToSettings(
 /**
  * Load known marketplaces configuration from disk
  *
- * Reads the configuration file at ~/.claude/plugins/known_marketplaces.json
+ * Reads the configuration file at ~/.miniClaude/plugins/known_marketplaces.json
  * which contains a mapping of marketplace names to their sources and metadata.
  *
  * Example configuration file content:
@@ -248,12 +248,12 @@ export function saveMarketplaceToSettings(
  * {
  *   "official-marketplace": {
  *     "source": { "source": "url", "url": "https://example.com/marketplace.json" },
- *     "installLocation": "/Users/me/.claude/plugins/marketplaces/official-marketplace.json",
+ *     "installLocation": "/Users/me/.miniClaude/plugins/marketplaces/official-marketplace.json",
  *     "lastUpdated": "2024-01-15T10:30:00.000Z"
  *   },
  *   "company-plugins": {
  *     "source": { "source": "github", "repo": "mycompany/plugins" },
- *     "installLocation": "/Users/me/.claude/plugins/marketplaces/company-plugins",
+ *     "installLocation": "/Users/me/.miniClaude/plugins/marketplaces/company-plugins",
  *     "lastUpdated": "2024-01-14T15:45:00.000Z"
  *   }
  * }
@@ -319,7 +319,7 @@ export async function loadKnownMarketplacesConfigSafe(): Promise<KnownMarketplac
 /**
  * Save known marketplaces configuration to disk
  *
- * Writes the configuration to ~/.claude/plugins/known_marketplaces.json,
+ * Writes the configuration to ~/.miniClaude/plugins/known_marketplaces.json,
  * creating the directory structure if it doesn't exist.
  *
  * @param config - The marketplace configuration to save
@@ -1070,7 +1070,7 @@ export async function reconcileSparseCheckout(
  * Example repository structure:
  * ```
  * my-marketplace/
- *   ├── .claude-plugin/
+ *   ├── .miniClaude-plugin/
  *   │   └── marketplace.json    # Default location for marketplace manifest
  *   ├── plugins/                # Plugin implementations
  *   └── README.md
@@ -1409,7 +1409,7 @@ async function parseFileWithSchema<T>(
  *
  * Handles different source types:
  * - URL: Downloads marketplace.json directly
- * - GitHub: Clones repo and looks for .claude-plugin/marketplace.json
+ * - GitHub: Clones repo and looks for .miniClaude-plugin/marketplace.json
  * - Git: Clones repository from git URL
  * - NPM: (Not yet implemented) Would fetch from npm package
  * - File: Reads from local filesystem
@@ -1418,10 +1418,10 @@ async function parseFileWithSchema<T>(
  * to match the marketplace's actual name from the manifest.
  *
  * Cache structure:
- * ~/.claude/plugins/marketplaces/
+ * ~/.miniClaude/plugins/marketplaces/
  *   ├── official-marketplace.json     # From URL source
  *   ├── github-marketplace/          # From GitHub/Git source
- *   │   └── .claude-plugin/
+ *   │   └── .miniClaude-plugin/
  *   │       └── marketplace.json
  *   └── local-marketplace.json       # From file source
  *
@@ -1593,7 +1593,7 @@ async function loadAndCacheMarketplace(
 
         marketplacePath = join(
           temporaryCachePath,
-          source.path || '.claude-plugin/marketplace.json',
+          source.path || '.miniClaude-plugin/marketplace.json',
         )
         break
       }
@@ -1610,7 +1610,7 @@ async function loadAndCacheMarketplace(
         )
         marketplacePath = join(
           temporaryCachePath,
-          source.path || '.claude-plugin/marketplace.json',
+          source.path || '.miniClaude-plugin/marketplace.json',
         )
         break
       }
@@ -1622,8 +1622,8 @@ async function loadAndCacheMarketplace(
 
       case 'file': {
         // For local files, resolve paths relative to marketplace root directory
-        // File sources point to .claude-plugin/marketplace.json, so the marketplace
-        // root is two directories up (parent of .claude-plugin/)
+        // File sources point to .miniClaude-plugin/marketplace.json, so the marketplace
+        // root is two directories up (parent of .miniClaude-plugin/)
         // Resolve to absolute so error messages show the actual path checked
         // (legacy known_marketplaces.json entries may have relative paths)
         const absPath = resolve(source.path)
@@ -1634,11 +1634,11 @@ async function loadAndCacheMarketplace(
       }
 
       case 'directory': {
-        // For directories, look for .claude-plugin/marketplace.json
+        // For directories, look for .miniClaude-plugin/marketplace.json
         // Resolve to absolute so error messages show the actual path checked
         // (legacy known_marketplaces.json entries may have relative paths)
         const absPath = resolve(source.path)
-        marketplacePath = join(absPath, '.claude-plugin', 'marketplace.json')
+        marketplacePath = join(absPath, '.miniClaude-plugin', 'marketplace.json')
         temporaryCachePath = absPath
         cleanupNeeded = false
         break
@@ -1660,7 +1660,7 @@ async function loadAndCacheMarketplace(
         temporaryCachePath = join(cacheDir, source.name)
         marketplacePath = join(
           temporaryCachePath,
-          '.claude-plugin',
+          '.miniClaude-plugin',
           'marketplace.json',
         )
         cleanupNeeded = false
@@ -1771,7 +1771,7 @@ async function loadAndCacheMarketplace(
  * Add a marketplace source to the known marketplaces
  *
  * The marketplace is fetched, validated, and cached locally.
- * The configuration is saved to ~/.claude/plugins/known_marketplaces.json.
+ * The configuration is saved to ~/.miniClaude/plugins/known_marketplaces.json.
  *
  * @param source - MarketplaceSource object representing the marketplace source.
  *                 Callers should parse user input into MarketplaceSource format
@@ -1866,8 +1866,8 @@ export async function addMarketplaceSource(
     if (seedDir) {
       throw new Error(
         `Marketplace '${marketplace.name}' is seed-managed (${seedDir}). ` +
-          `To use a different source, ask your admin to update the seed, ` +
-          `or use a different marketplace name.`,
+        `To use a different source, ask your admin to update the seed, ` +
+        `or use a different marketplace name.`,
       )
     }
     logForDebugging(
@@ -1902,8 +1902,8 @@ export async function addMarketplaceSource(
       } else {
         logForDebugging(
           `Skipping cleanup of old installLocation (${oldEntry.installLocation}) — ` +
-            `outside ${cacheDir}. The path is corrupted; leaving it alone and ` +
-            `overwriting the config entry.`,
+          `outside ${cacheDir}. The path is corrupted; leaving it alone and ` +
+          `overwriting the config entry.`,
           { level: 'warn' },
         )
       }
@@ -1949,8 +1949,8 @@ export async function removeMarketplaceSource(name: string): Promise<void> {
   if (seedDir) {
     throw new Error(
       `Marketplace '${name}' is registered from the read-only seed directory ` +
-        `(${seedDir}) and will be re-registered on next startup. ` +
-        `To stop using its plugins: claude plugin disable <plugin>@${name}`,
+      `(${seedDir}) and will be re-registered on next startup. ` +
+      `To stop using its plugins: claude plugin disable <plugin>@${name}`,
     )
   }
 
@@ -2058,11 +2058,11 @@ export async function removeMarketplaceSource(name: string): Promise<void> {
 async function readCachedMarketplace(
   installLocation: string,
 ): Promise<PluginMarketplace> {
-  // For git-sourced directories, the manifest lives at .claude-plugin/marketplace.json.
+  // For git-sourced directories, the manifest lives at .miniClaude-plugin/marketplace.json.
   // For url/file/directory sources it is the installLocation itself.
   // Try the nested path first; fall back to installLocation when it is a plain file
   // (ENOTDIR) or the nested file is simply missing (ENOENT).
-  const nestedPath = join(installLocation, '.claude-plugin', 'marketplace.json')
+  const nestedPath = join(installLocation, '.miniClaude-plugin', 'marketplace.json')
   try {
     return await parseFileWithSchema(nestedPath, PluginMarketplaceSchema())
   } catch (e) {
@@ -2140,9 +2140,9 @@ export const getMarketplace = memoize(
     ) {
       throw new Error(
         `Marketplace "${name}" has a relative source path (${entry.source.path}) ` +
-          `in known_marketplaces.json — this is stale state from an older ` +
-          `Claude Code version. Run 'claude marketplace remove ${name}' and ` +
-          `re-add it from the original project directory.`,
+        `in known_marketplaces.json — this is stale state from an older ` +
+        `Claude Code version. Run 'claude marketplace remove ${name}' and ` +
+        `re-add it from the original project directory.`,
       )
     }
 
@@ -2162,7 +2162,7 @@ export const getMarketplace = memoize(
     // Cache doesn't exist or is invalid, fetch from source
     let marketplace: PluginMarketplace
     try {
-      ;({ marketplace } = await loadAndCacheMarketplace(entry.source))
+      ; ({ marketplace } = await loadAndCacheMarketplace(entry.source))
     } catch (error) {
       throw new Error(
         `Failed to load marketplace "${name}" from source (${entry.source.source}): ${errorMessage(error)}`,
@@ -2401,7 +2401,7 @@ export async function refreshMarketplace(
     if (seedDir) {
       throw new Error(
         `Marketplace '${name}' is seed-managed (${seedDir}) and its content is ` +
-          `controlled by the seed image. To update: ask your admin to update the seed.`,
+        `controlled by the seed image. To update: ask your admin to update the seed.`,
       )
     }
 
@@ -2417,10 +2417,10 @@ export async function refreshMarketplace(
       if (resolvedLoc !== cacheDir && !resolvedLoc.startsWith(cacheDir + sep)) {
         throw new Error(
           `Marketplace '${name}' has a corrupted installLocation ` +
-            `(${installLocation}) — expected a path inside ${cacheDir}. ` +
-            `This can happen after cross-platform path writes or manual edits ` +
-            `to known_marketplaces.json. ` +
-            `Run: claude plugin marketplace remove "${name}" and re-add it.`,
+          `(${installLocation}) — expected a path inside ${cacheDir}. ` +
+          `This can happen after cross-platform path writes or manual edits ` +
+          `to known_marketplaces.json. ` +
+          `Run: claude plugin marketplace remove "${name}" and re-add it.`,
         )
       }
     }
@@ -2538,9 +2538,9 @@ export async function refreshMarketplace(
             : `This marketplace may have been deprecated or moved to a new location.`
         throw new Error(
           `The marketplace.json file is no longer present in this repository.\n\n` +
-            `${reason}\n` +
-            `Source: ${sourceDisplay}\n\n` +
-            `You can remove this marketplace with: claude plugin marketplace remove "${name}"`,
+          `${reason}\n` +
+          `Source: ${sourceDisplay}\n\n` +
+          `You can remove this marketplace with: claude plugin marketplace remove "${name}"`,
         )
       }
     } else if (source.source === 'url') {
@@ -2604,8 +2604,8 @@ export async function setMarketplaceAutoUpdate(
   if (seedDir) {
     throw new Error(
       `Marketplace '${name}' is seed-managed (${seedDir}) and ` +
-        `auto-update is always disabled for seed content. ` +
-        `To update: ask your admin to update the seed.`,
+      `auto-update is always disabled for seed content. ` +
+      `To update: ask your admin to update the seed.`,
     )
   }
 

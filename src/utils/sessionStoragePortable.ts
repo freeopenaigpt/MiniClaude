@@ -387,7 +387,7 @@ export async function findProjectDir(
  * to sibling git worktrees. `projectPath` in the result is the canonical
  * user-facing directory the file was found under.
  *
- * When `dir` is omitted: scan all project directories under ~/.claude/projects/.
+ * When `dir` is omitted: scan all project directories under ~/.miniClaude/projects/.
  * `projectPath` is undefined in this case (no meaningful project path to report).
  *
  * Existence is checked by stat (operate-then-catch-ENOENT, no existsSync).
@@ -591,7 +591,7 @@ function processStraddle(
     if (hasPrefix(cb, SYSTEM_PREFIX, 0, s.carryLen)) {
       const hit = parseBoundaryLine(
         cb.toString('utf-8', 0, s.carryLen) +
-          chunk.toString('utf-8', 0, firstNl),
+        chunk.toString('utf-8', 0, firstNl),
       )
       if (hit?.hasPreservedSegment) {
         s.hasPreservedSegment = true

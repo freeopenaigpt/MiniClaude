@@ -189,7 +189,7 @@ const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp'])
 
 /**
  * Detects if a file path is a session-related file for analytics logging.
- * Only matches files within the Claude config directory (e.g., ~/.claude).
+ * Only matches files within the Claude config directory (e.g., ~/.miniClaude).
  * Returns the type of session file or null if not a session file.
  */
 function detectSessionFileType(
@@ -205,7 +205,7 @@ function detectSessionFileType(
   // Normalize path to use forward slashes for consistent matching across platforms
   const normalizedPath = filePath.split(win32.sep).join(posix.sep)
 
-  // Session memory files: ~/.claude/session-memory/*.md (including summary.md)
+  // Session memory files: ~/.miniClaude/session-memory/*.md (including summary.md)
   if (
     normalizedPath.includes('/session-memory/') &&
     normalizedPath.endsWith('.md')
@@ -213,7 +213,7 @@ function detectSessionFileType(
     return 'session_memory'
   }
 
-  // Session JSONL transcript files: ~/.claude/projects/*/*.jsonl
+  // Session JSONL transcript files: ~/.miniClaude/projects/*/*.jsonl
   if (
     normalizedPath.includes('/projects/') &&
     normalizedPath.endsWith('.jsonl')
@@ -583,7 +583,7 @@ export const FileReadTool = buildTool({
           context.dynamicSkillDirTriggers?.add(dir)
         }
         // Don't await - let skill loading happen in the background
-        addSkillDirectories(newSkillDirs).catch(() => {})
+        addSkillDirectories(newSkillDirs).catch(() => { })
       }
 
       // Activate conditional skills whose path patterns match this file
@@ -827,11 +827,11 @@ async function callInner(
     if (cellsJsonBytes > maxSizeBytes) {
       throw new Error(
         `Notebook content (${formatFileSize(cellsJsonBytes)}) exceeds maximum allowed size (${formatFileSize(maxSizeBytes)}). ` +
-          `Use ${BASH_TOOL_NAME} with jq to read specific portions:\n` +
-          `  cat "${file_path}" | jq '.cells[:20]' # First 20 cells\n` +
-          `  cat "${file_path}" | jq '.cells[100:120]' # Cells 100-120\n` +
-          `  cat "${file_path}" | jq '.cells | length' # Count total cells\n` +
-          `  cat "${file_path}" | jq '.cells[] | select(.cell_type=="code") | .source' # All code sources`,
+        `Use ${BASH_TOOL_NAME} with jq to read specific portions:\n` +
+        `  cat "${file_path}" | jq '.cells[:20]' # First 20 cells\n` +
+        `  cat "${file_path}" | jq '.cells[100:120]' # Cells 100-120\n` +
+        `  cat "${file_path}" | jq '.cells | length' # Count total cells\n` +
+        `  cat "${file_path}" | jq '.cells[] | select(.cell_type=="code") | .source' # All code sources`,
       )
     }
 
@@ -949,8 +949,8 @@ async function callInner(
     if (pageCount !== null && pageCount > PDF_AT_MENTION_INLINE_THRESHOLD) {
       throw new Error(
         `This PDF has ${pageCount} pages, which is too many to read at once. ` +
-          `Use the pages parameter to read specific page ranges (e.g., pages: "1-5"). ` +
-          `Maximum ${PDF_MAX_PAGES_PER_READ} pages per request.`,
+        `Use the pages parameter to read specific page ranges (e.g., pages: "1-5"). ` +
+        `Maximum ${PDF_MAX_PAGES_PER_READ} pages per request.`,
       )
     }
 
@@ -979,8 +979,8 @@ async function callInner(
     if (!isPDFSupported()) {
       throw new Error(
         'Reading full PDFs is not supported with this model. Use a newer model (Sonnet 3.5 v2 or later), ' +
-          `or use the pages parameter to read specific page ranges (e.g., pages: "1-5", maximum ${PDF_MAX_PAGES_PER_READ} pages per request). ` +
-          'Page extraction requires poppler-utils: install with `brew install poppler` on macOS or `apt-get install poppler-utils` on Debian/Ubuntu.',
+        `or use the pages parameter to read specific page ranges (e.g., pages: "1-5", maximum ${PDF_MAX_PAGES_PER_READ} pages per request). ` +
+        'Page extraction requires poppler-utils: install with `brew install poppler` on macOS or `apt-get install poppler-utils` on Debian/Ubuntu.',
       )
     }
 

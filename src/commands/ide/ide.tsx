@@ -128,7 +128,7 @@ function IDEScreen(t0) {
   }
   let t5;
   if ($[17] !== availableIDEs.length) {
-    t5 = availableIDEs.length === 0 && <Text dimColor={true}>{isSupportedJetBrainsTerminal() ? "No available IDEs detected. Please install the plugin and restart your IDE:\nhttps://docs.claude.com/s/claude-code-jetbrains" : "No available IDEs detected. Make sure your IDE has the Claude Code extension or plugin installed and is running."}</Text>;
+    t5 = availableIDEs.length === 0 && <Text dimColor={true}>{isSupportedJetBrainsTerminal() ? "No available IDEs detected. Please install the plugin and restart your IDE:\nhttps://docs.miniClaude.com/s/claude-code-jetbrains" : "No available IDEs detected. Make sure your IDE has the Claude Code extension or plugin installed and is running."}</Text>;
     $[17] = availableIDEs.length;
     $[18] = t5;
   } else {
@@ -566,7 +566,7 @@ function IDECommandFlow({
       // Close the MCP transport and remove the client from state
       if (ideClient && ideClient.type === 'connected' && currentIDE) {
         // Null out onclose to prevent auto-reconnection
-        ideClient.client.onclose = () => {};
+        ideClient.client.onclose = () => { };
         void clearServerCache('ide', ideClient.config);
         setAppState(prev => ({
           ...prev,

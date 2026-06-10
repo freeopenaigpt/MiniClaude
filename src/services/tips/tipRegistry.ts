@@ -384,7 +384,7 @@ const externalTips: Tip[] = [
   {
     id: 'custom-commands',
     content: async () =>
-      'Create skills by adding .md files to .claude/skills/ in your project or ~/.claude/skills/ for skills that work in any project',
+      'Create skills by adding .md files to .miniClaude/skills/ in your project or ~/.miniClaude/skills/ for skills that work in any project',
     cooldownSessions: 15,
     async isRelevant() {
       const config = getGlobalConfig()
@@ -624,21 +624,21 @@ const externalTips: Tip[] = [
 const internalOnlyTips: Tip[] =
   process.env.USER_TYPE === 'ant'
     ? [
-        {
-          id: 'important-claudemd',
-          content: async () =>
-            '[ANT-ONLY] Use "IMPORTANT:" prefix for must-follow CLAUDE.md rules',
-          cooldownSessions: 30,
-          isRelevant: async () => true,
-        },
-        {
-          id: 'skillify',
-          content: async () =>
-            '[ANT-ONLY] Use /skillify at the end of a workflow to turn it into a reusable skill',
-          cooldownSessions: 15,
-          isRelevant: async () => true,
-        },
-      ]
+      {
+        id: 'important-claudemd',
+        content: async () =>
+          '[ANT-ONLY] Use "IMPORTANT:" prefix for must-follow CLAUDE.md rules',
+        cooldownSessions: 30,
+        isRelevant: async () => true,
+      },
+      {
+        id: 'skillify',
+        content: async () =>
+          '[ANT-ONLY] Use /skillify at the end of a workflow to turn it into a reusable skill',
+        cooldownSessions: 15,
+        isRelevant: async () => true,
+      },
+    ]
     : []
 
 function getCustomTips(): Tip[] {

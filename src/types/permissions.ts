@@ -97,38 +97,38 @@ export type PermissionUpdateDestination =
  */
 export type PermissionUpdate =
   | {
-      type: 'addRules'
-      destination: PermissionUpdateDestination
-      rules: PermissionRuleValue[]
-      behavior: PermissionBehavior
-    }
+    type: 'addRules'
+    destination: PermissionUpdateDestination
+    rules: PermissionRuleValue[]
+    behavior: PermissionBehavior
+  }
   | {
-      type: 'replaceRules'
-      destination: PermissionUpdateDestination
-      rules: PermissionRuleValue[]
-      behavior: PermissionBehavior
-    }
+    type: 'replaceRules'
+    destination: PermissionUpdateDestination
+    rules: PermissionRuleValue[]
+    behavior: PermissionBehavior
+  }
   | {
-      type: 'removeRules'
-      destination: PermissionUpdateDestination
-      rules: PermissionRuleValue[]
-      behavior: PermissionBehavior
-    }
+    type: 'removeRules'
+    destination: PermissionUpdateDestination
+    rules: PermissionRuleValue[]
+    behavior: PermissionBehavior
+  }
   | {
-      type: 'setMode'
-      destination: PermissionUpdateDestination
-      mode: ExternalPermissionMode
-    }
+    type: 'setMode'
+    destination: PermissionUpdateDestination
+    mode: ExternalPermissionMode
+  }
   | {
-      type: 'addDirectories'
-      destination: PermissionUpdateDestination
-      directories: string[]
-    }
+    type: 'addDirectories'
+    destination: PermissionUpdateDestination
+    directories: string[]
+  }
   | {
-      type: 'removeDirectories'
-      destination: PermissionUpdateDestination
-      directories: string[]
-    }
+    type: 'removeDirectories'
+    destination: PermissionUpdateDestination
+    directories: string[]
+  }
 
 /**
  * Source of an additional working directory permission.
@@ -253,75 +253,75 @@ export type PermissionResult<
 > =
   | PermissionDecision<Input>
   | {
-      behavior: 'passthrough'
-      message: string
-      decisionReason?: PermissionDecision<Input>['decisionReason']
-      suggestions?: PermissionUpdate[]
-      blockedPath?: string
-      /**
-       * If set, an allow classifier check should be run asynchronously.
-       * The classifier may auto-approve the permission before the user responds.
-       */
-      pendingClassifierCheck?: PendingClassifierCheck
-    }
+    behavior: 'passthrough'
+    message: string
+    decisionReason?: PermissionDecision<Input>['decisionReason']
+    suggestions?: PermissionUpdate[]
+    blockedPath?: string
+    /**
+     * If set, an allow classifier check should be run asynchronously.
+     * The classifier may auto-approve the permission before the user responds.
+     */
+    pendingClassifierCheck?: PendingClassifierCheck
+  }
 
 /**
  * Explanation of why a permission decision was made
  */
 export type PermissionDecisionReason =
   | {
-      type: 'rule'
-      rule: PermissionRule
-    }
+    type: 'rule'
+    rule: PermissionRule
+  }
   | {
-      type: 'mode'
-      mode: PermissionMode
-    }
+    type: 'mode'
+    mode: PermissionMode
+  }
   | {
-      type: 'subcommandResults'
-      reasons: Map<string, PermissionResult>
-    }
+    type: 'subcommandResults'
+    reasons: Map<string, PermissionResult>
+  }
   | {
-      type: 'permissionPromptTool'
-      permissionPromptToolName: string
-      toolResult: unknown
-    }
+    type: 'permissionPromptTool'
+    permissionPromptToolName: string
+    toolResult: unknown
+  }
   | {
-      type: 'hook'
-      hookName: string
-      hookSource?: string
-      reason?: string
-    }
+    type: 'hook'
+    hookName: string
+    hookSource?: string
+    reason?: string
+  }
   | {
-      type: 'asyncAgent'
-      reason: string
-    }
+    type: 'asyncAgent'
+    reason: string
+  }
   | {
-      type: 'sandboxOverride'
-      reason: 'excludedCommand' | 'dangerouslyDisableSandbox'
-    }
+    type: 'sandboxOverride'
+    reason: 'excludedCommand' | 'dangerouslyDisableSandbox'
+  }
   | {
-      type: 'classifier'
-      classifier: string
-      reason: string
-    }
+    type: 'classifier'
+    classifier: string
+    reason: string
+  }
   | {
-      type: 'workingDir'
-      reason: string
-    }
+    type: 'workingDir'
+    reason: string
+  }
   | {
-      type: 'safetyCheck'
-      reason: string
-      // When true, auto mode lets the classifier evaluate this instead of
-      // forcing a prompt. True for sensitive-file paths (.claude/, .git/,
-      // shell configs) — the classifier can see context and decide. False
-      // for Windows path bypass attempts and cross-machine bridge messages.
-      classifierApprovable: boolean
-    }
+    type: 'safetyCheck'
+    reason: string
+    // When true, auto mode lets the classifier evaluate this instead of
+    // forcing a prompt. True for sensitive-file paths (.miniClaude/, .git/,
+    // shell configs) — the classifier can see context and decide. False
+    // for Windows path bypass attempts and cross-machine bridge messages.
+    classifierApprovable: boolean
+  }
   | {
-      type: 'other'
-      reason: string
-    }
+    type: 'other'
+    reason: string
+  }
 
 // ============================================================================
 // Bash Classifier Types

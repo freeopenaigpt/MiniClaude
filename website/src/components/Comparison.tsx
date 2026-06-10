@@ -64,7 +64,7 @@ export default function Comparison() {
                 {row.feature}
               </div>
               <div className="p-6 font-mono text-sm border-l border-white/20 text-center">
-                {row.claude}
+                {row.miniClaude}
               </div>
               <div className="p-6 font-mono text-sm border-l border-white/20 text-center text-accent">
                 {row.mini}

@@ -1,7 +1,7 @@
 /**
  * Teammate Mailbox - File-based messaging system for agent swarms
  *
- * Each teammate has an inbox file at .claude/teams/{team_name}/inboxes/{agent_name}.json
+ * Each teammate has an inbox file at .miniClaude/teams/{team_name}/inboxes/{agent_name}.json
  * Other teammates can write messages to it, and the recipient sees them as attachments.
  *
  * Note: Inboxes are keyed by agent name within a team.
@@ -52,7 +52,7 @@ export type TeammateMessage = {
 
 /**
  * Get the path to a teammate's inbox file
- * Structure: ~/.claude/teams/{team_name}/inboxes/{agent_name}.json
+ * Structure: ~/.miniClaude/teams/{team_name}/inboxes/{agent_name}.json
  */
 export function getInboxPath(agentName: string, teamName?: string): string {
   const team = teamName || getTeamName() || 'default'
@@ -468,20 +468,20 @@ export type PermissionRequestMessage = {
  */
 export type PermissionResponseMessage =
   | {
-      type: 'permission_response'
-      request_id: string
-      subtype: 'success'
-      response?: {
-        updated_input?: Record<string, unknown>
-        permission_updates?: unknown[]
-      }
+    type: 'permission_response'
+    request_id: string
+    subtype: 'success'
+    response?: {
+      updated_input?: Record<string, unknown>
+      permission_updates?: unknown[]
     }
+  }
   | {
-      type: 'permission_response'
-      request_id: string
-      subtype: 'error'
-      error: string
-    }
+    type: 'permission_response'
+    request_id: string
+    subtype: 'error'
+    error: string
+  }
 
 /**
  * Creates a permission request message to send to the team leader

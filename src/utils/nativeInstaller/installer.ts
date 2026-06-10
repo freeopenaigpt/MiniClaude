@@ -480,8 +480,8 @@ async function performVersionUpdate(
     }
     throw new Error(
       `Failed to create executable at ${executablePath}. ` +
-        `Source file exists: ${installPathExists}. ` +
-        `Check write permissions to ${executablePath}.`,
+      `Source file exists: ${installPathExists}. ` +
+      `Check write permissions to ${executablePath}.`,
     )
   }
   return needsInstall
@@ -1688,8 +1688,8 @@ export async function cleanupNpmInstallations(): Promise<{
     }
   }
 
-  // Check for local installation at ~/.claude/local
-  const localInstallDir = join(homedir(), '.claude', 'local')
+  // Check for local installation at ~/.miniClaude/local
+  const localInstallDir = join(homedir(), '.miniClaude', 'local')
 
   try {
     await rm(localInstallDir, { recursive: true })

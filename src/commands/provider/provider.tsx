@@ -85,8 +85,8 @@ function ProviderSwitch({
     const desc = provider.description ? ` (${provider.description})` : ''
     onDone(
       `Switched to ${chalk.bold(providerName)}${desc}${scope}\n` +
-        `  model: ${chalk.bold(provider.model || 'N/A')}\n` +
-        `  base_url: ${provider.env.ANTHROPIC_BASE_URL || 'N/A'}`,
+      `  model: ${chalk.bold(provider.model || 'N/A')}\n` +
+      `  base_url: ${provider.env.ANTHROPIC_BASE_URL || 'N/A'}`,
     )
   }, [])
 
@@ -110,8 +110,8 @@ function ProviderList({
       const desc = config.description ? ` — ${config.description}` : ''
       lines.push(
         `  ${chalk.bold(name)}${marker}${desc}\n` +
-          `    model: ${config.model || 'N/A'}\n` +
-          `    base_url: ${config.env.ANTHROPIC_BASE_URL || 'N/A'}`,
+        `    model: ${config.model || 'N/A'}\n` +
+        `    base_url: ${config.env.ANTHROPIC_BASE_URL || 'N/A'}`,
       )
     }
     onDone(lines.join('\n'))
@@ -140,14 +140,14 @@ export const call: LocalJSXCommandCall = async (onDone, _context, args) => {
 
   if (!providers || Object.keys(providers).length === 0) {
     onDone(
-      'No providers configured. Add a "providers" section to ~/.claude/settings.json:\n' +
-        '  "providers": {\n' +
-        '    "my-provider": {\n' +
-        '      "env": { "ANTHROPIC_BASE_URL": "...", "ANTHROPIC_AUTH_TOKEN": "..." },\n' +
-        '      "model": "...",\n' +
-        '      "description": "..."\n' +
-        '    }\n' +
-        '  }',
+      'No providers configured. Add a "providers" section to ~/.miniClaude/settings.json:\n' +
+      '  "providers": {\n' +
+      '    "my-provider": {\n' +
+      '      "env": { "ANTHROPIC_BASE_URL": "...", "ANTHROPIC_AUTH_TOKEN": "..." },\n' +
+      '      "model": "...",\n' +
+      '      "description": "..."\n' +
+      '    }\n' +
+      '  }',
     )
     return
   }

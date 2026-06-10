@@ -388,7 +388,7 @@ export async function cleanupOldSessionEnvDirs(): Promise<CleanupResult> {
 }
 
 /**
- * Cleans up old debug log files from ~/.claude/debug/
+ * Cleans up old debug log files from ~/.miniClaude/debug/
  * Preserves the 'latest' symlink which points to the current session's log.
  * Debug logs can grow very large (especially with the infinite logging loop bug)
  * and accumulate indefinitely without this cleanup.
@@ -530,7 +530,7 @@ export async function cleanupNpmCacheForAnthropicPackages(): Promise<void> {
       durationMs: Date.now() - startTime,
     })
   } finally {
-    await lockfile.unlock(markerPath, { realpath: false }).catch(() => {})
+    await lockfile.unlock(markerPath, { realpath: false }).catch(() => { })
   }
 }
 
@@ -568,7 +568,7 @@ export async function cleanupOldVersionsThrottled(): Promise<void> {
   } catch (error) {
     logError(error as Error)
   } finally {
-    await lockfile.unlock(markerPath, { realpath: false }).catch(() => {})
+    await lockfile.unlock(markerPath, { realpath: false }).catch(() => { })
   }
 }
 

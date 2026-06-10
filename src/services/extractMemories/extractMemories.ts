@@ -1,6 +1,6 @@
 /**
  * Extracts durable memories from the current session transcript
- * and writes them to the auto-memory directory (~/.claude/projects/<path>/memory/).
+ * and writes them to the auto-memory directory (~/.miniClaude/projects/<path>/memory/).
  *
  * It runs once at the end of each complete query loop (when the model produces
  * a final response with no tool calls) via handleStopHooks in stopHooks.ts.
@@ -279,13 +279,13 @@ type AppendSystemMessageFn = (
 /** The active extractor function, set by initExtractMemories(). */
 let extractor:
   | ((
-      context: REPLHookContext,
-      appendSystemMessage?: AppendSystemMessageFn,
-    ) => Promise<void>)
+    context: REPLHookContext,
+    appendSystemMessage?: AppendSystemMessageFn,
+  ) => Promise<void>)
   | null = null
 
 /** The active drain function, set by initExtractMemories(). No-op until init. */
-let drainer: (timeoutMs?: number) => Promise<void> = async () => {}
+let drainer: (timeoutMs?: number) => Promise<void> = async () => { }
 
 /**
  * Initialize the memory extraction system.
@@ -319,9 +319,9 @@ export function initExtractMemories(): void {
    *  and run one trailing extraction after the current one finishes. */
   let pendingContext:
     | {
-        context: REPLHookContext
-        appendSystemMessage?: AppendSystemMessageFn
-      }
+      context: REPLHookContext
+      appendSystemMessage?: AppendSystemMessageFn
+    }
     | undefined
 
   // --- Inner extraction logic ---
@@ -402,15 +402,15 @@ export function initExtractMemories(): void {
       const userPrompt =
         feature('TEAMMEM') && teamMemoryEnabled
           ? buildExtractCombinedPrompt(
-              newMessageCount,
-              existingMemories,
-              skipIndex,
-            )
+            newMessageCount,
+            existingMemories,
+            skipIndex,
+          )
           : buildExtractAutoOnlyPrompt(
-              newMessageCount,
-              existingMemories,
-              skipIndex,
-            )
+            newMessageCount,
+            existingMemories,
+            skipIndex,
+          )
 
       const result = await runForkedAgent({
         promptMessages: [createUserMessage({ content: userPrompt })],
@@ -444,9 +444,9 @@ export function initExtractMemories(): void {
       const hitPct =
         totalInput > 0
           ? (
-              (result.totalUsage.cache_read_input_tokens / totalInput) *
-              100
-            ).toFixed(1)
+            (result.totalUsage.cache_read_input_tokens / totalInput) *
+            100
+          ).toFixed(1)
           : '0.0'
       logForDebugging(
         `[extractMemories] finished — ${writtenPaths.length} files written, cache: read=${result.totalUsage.cache_read_input_tokens} create=${result.totalUsage.cache_creation_input_tokens} input=${result.totalUsage.input_tokens} (${hitPct}% hit)`,
@@ -579,7 +579,7 @@ export function initExtractMemories(): void {
   drainer = async (timeoutMs = 60_000) => {
     if (inFlightExtractions.size === 0) return
     await Promise.race([
-      Promise.all(inFlightExtractions).catch(() => {}),
+      Promise.all(inFlightExtractions).catch(() => { }),
       // eslint-disable-next-line no-restricted-syntax -- sleep() has no .unref(); timer must not block exit
       new Promise<void>(r => setTimeout(r, timeoutMs).unref()),
     ])

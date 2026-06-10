@@ -116,16 +116,16 @@ export function savePluginOptions(
     storage.read()?.pluginSecrets?.[pluginId] ?? undefined
   const secureScrubbed = existingInSecureStorage
     ? Object.fromEntries(
-        Object.entries(existingInSecureStorage).filter(
-          ([k]) => !nonSensitiveKeysInThisSave.has(k),
-        ),
-      )
+      Object.entries(existingInSecureStorage).filter(
+        ([k]) => !nonSensitiveKeysInThisSave.has(k),
+      ),
+    )
     : undefined
   const needSecureScrub =
     secureScrubbed &&
     existingInSecureStorage &&
     Object.keys(secureScrubbed).length !==
-      Object.keys(existingInSecureStorage).length
+    Object.keys(existingInSecureStorage).length
   if (Object.keys(sensitive).length > 0 || needSecureScrub) {
     const existing = storage.read() ?? {}
     if (!existing.pluginSecrets) {
@@ -155,7 +155,7 @@ export function savePluginOptions(
   //
   // TODO: getSettings_DEPRECATED returns MERGED settings across all scopes.
   // Mutating that and writing to userSettings can leak project-scope
-  // pluginConfigs into ~/.claude/settings.json. Same pattern exists in
+  // pluginConfigs into ~/.miniClaude/settings.json. Same pattern exists in
   // saveMcpServerUserConfig. Safe today since pluginConfigs is only ever
   // written here (user-scope), but will bite if we add project-scoped
   // plugin options.
@@ -362,7 +362,7 @@ export function substituteUserConfigVariables(
     if (configValue === undefined) {
       throw new Error(
         `Missing required user configuration value: ${key}. ` +
-          `This should have been validated before variable substitution.`,
+        `This should have been validated before variable substitution.`,
       )
     }
     return String(configValue)

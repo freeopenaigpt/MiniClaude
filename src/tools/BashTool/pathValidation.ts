@@ -116,9 +116,9 @@ function checkDangerousRemovalPaths(
  * `!arg.startsWith('-')` filtering drops these, causing path validation to be
  * silently skipped for attack payloads like:
  *
- *   rm -- -/../.claude/settings.local.json
+ *   rm -- -/../.miniClaude/settings.local.json
  *
- * Here `-/../.claude/settings.local.json` starts with `-` so the naive filter
+ * Here `-/../.miniClaude/settings.local.json` starts with `-` so the naive filter
  * drops it, validation sees zero paths, returns passthrough, and the file is
  * deleted without a prompt. With `--` handling, the path IS extracted and
  * validated (blocked by isClaudeConfigFilePath / pathInAllowedWorkingPath).
@@ -629,13 +629,13 @@ function validateCommandPaths(
 
   // SECURITY: Block write operations in compound commands containing 'cd'
   // This prevents bypassing path safety checks via directory changes before operations.
-  // Example attack: cd .claude/ && mv test.txt settings.json
-  // This would bypass the check for .claude/settings.json because paths are resolved
+  // Example attack: cd .miniClaude/ && mv test.txt settings.json
+  // This would bypass the check for .miniClaude/settings.json because paths are resolved
   // relative to the original CWD, not accounting for the cd's effect.
   //
   // ALTERNATIVE APPROACH: Instead of blocking all writes with cd, we could track the
-  // effective CWD through the command chain (e.g., after "cd .claude/", subsequent
-  // commands would be validated with CWD=".claude/"). This would be more permissive
+  // effective CWD through the command chain (e.g., after "cd .miniClaude/", subsequent
+  // commands would be validated with CWD=".miniClaude/"). This would be more permissive
   // but requires careful handling of:
   // - Relative paths (cd ../foo)
   // - Special cd targets (cd ~, cd -, cd with no args)
@@ -672,7 +672,7 @@ function validateCommandPaths(
       // Otherwise use the standard "was blocked" message
       const message =
         decisionReason?.type === 'other' ||
-        decisionReason?.type === 'safetyCheck'
+          decisionReason?.type === 'safetyCheck'
           ? decisionReason.reason
           : `${command} in '${resolvedPath}' was blocked. For security, Claude Code may only ${ACTION_VERBS[command]} the allowed working directories for this session: ${dirListStr}.`
 
@@ -911,7 +911,7 @@ function validateSinglePathCommandArgv(
   // `timeout 5 ` prefix), so strip here too.
   const operationTypeOverride =
     baseCmd === 'sed' &&
-    sedCommandIsAllowedByAllowlist(stripSafeWrappers(cmd.text))
+      sedCommandIsAllowedByAllowlist(stripSafeWrappers(cmd.text))
       ? ('read' as FileOperationType)
       : undefined
   const pathChecker = createPathChecker(
@@ -929,7 +929,7 @@ function validateOutputRedirections(
 ): PermissionResult {
   // SECURITY: Block output redirections in compound commands containing 'cd'
   // This prevents bypassing path safety checks via directory changes before redirections.
-  // Example attack: cd .claude/ && echo "malicious" > settings.json
+  // Example attack: cd .miniClaude/ && echo "malicious" > settings.json
   // The redirection target would be validated relative to the original CWD, but the
   // actual write happens in the changed directory after 'cd' executes.
   if (compoundCommandHasCd && redirections.length > 0) {
@@ -965,7 +965,7 @@ function validateOutputRedirections(
       // Otherwise use the standard message for deny rules or working directory restrictions
       const message =
         decisionReason?.type === 'other' ||
-        decisionReason?.type === 'safetyCheck'
+          decisionReason?.type === 'safetyCheck'
           ? decisionReason.reason
           : decisionReason?.type === 'rule'
             ? `Output redirection to '${resolvedPath}' was blocked by a deny rule.`
@@ -1262,7 +1262,7 @@ function skipEnvFlags(a: readonly string[]): number {
  */
 export function stripWrappersFromArgv(argv: string[]): string[] {
   let a = argv
-  for (;;) {
+  for (; ;) {
     if (a[0] === 'time' || a[0] === 'nohup') {
       a = a.slice(a[1] === '--' ? 2 : 1)
     } else if (a[0] === 'timeout') {

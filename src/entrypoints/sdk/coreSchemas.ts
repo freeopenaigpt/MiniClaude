@@ -303,12 +303,12 @@ export const PermissionDecisionClassificationSchema = lazySchema(() =>
     .enum(['user_temporary', 'user_permanent', 'user_reject'])
     .describe(
       'Classification of this permission decision for telemetry. SDK hosts ' +
-        'that prompt users (desktop apps, IDEs) should set this to reflect ' +
-        'what actually happened: user_temporary for allow-once, user_permanent ' +
-        'for always-allow (both the click and later cache hits), user_reject ' +
-        'for deny. If unset, the CLI infers conservatively (temporary for ' +
-        'allow, reject for deny). The vocabulary matches tool_decision OTel ' +
-        'events (monitoring-usage docs).',
+      'that prompt users (desktop apps, IDEs) should set this to reflect ' +
+      'what actually happened: user_temporary for allow-once, user_permanent ' +
+      'for always-allow (both the click and later cache hits), user_reject ' +
+      'for deny. If unset, the CLI infers conservatively (temporary for ' +
+      'allow, reject for deny). The vocabulary matches tool_decision OTel ' +
+      'events (monitoring-usage docs).',
     ),
 )
 
@@ -339,11 +339,11 @@ export const PermissionModeSchema = lazySchema(() =>
     .enum(['default', 'acceptEdits', 'bypassPermissions', 'plan', 'dontAsk'])
     .describe(
       'Permission mode for controlling how tool executions are handled. ' +
-        "'default' - Standard behavior, prompts for dangerous operations. " +
-        "'acceptEdits' - Auto-accept file edit operations. " +
-        "'bypassPermissions' - Bypass all permission checks (requires allowDangerouslySkipPermissions). " +
-        "'plan' - Planning mode, no actual tool execution. " +
-        "'dontAsk' - Don't prompt for permissions, deny if not pre-approved.",
+      "'default' - Standard behavior, prompts for dangerous operations. " +
+      "'acceptEdits' - Auto-accept file edit operations. " +
+      "'bypassPermissions' - Bypass all permission checks (requires allowDangerouslySkipPermissions). " +
+      "'plan' - Planning mode, no actual tool execution. " +
+      "'dontAsk' - Don't prompt for permissions, deny if not pre-approved.",
     ),
 )
 
@@ -395,17 +395,17 @@ export const BaseHookInputSchema = lazySchema(() =>
       .optional()
       .describe(
         'Subagent identifier. Present only when the hook fires from within a subagent ' +
-          '(e.g., a tool called by an AgentTool worker). Absent for the main thread, ' +
-          'even in --agent sessions. Use this field (not agent_type) to distinguish ' +
-          'subagent calls from main-thread calls.',
+        '(e.g., a tool called by an AgentTool worker). Absent for the main thread, ' +
+        'even in --agent sessions. Use this field (not agent_type) to distinguish ' +
+        'subagent calls from main-thread calls.',
       ),
     agent_type: z
       .string()
       .optional()
       .describe(
         'Agent type name (e.g., "general-purpose", "code-reviewer"). Present when the ' +
-          'hook fires from within a subagent (alongside agent_id), or on the main thread ' +
-          'of a session started with --agent (without agent_id).',
+        'hook fires from within a subagent (alongside agent_id), or on the main thread ' +
+        'of a session started with --agent (without agent_id).',
       ),
   }),
 )
@@ -520,7 +520,7 @@ export const StopHookInputSchema = lazySchema(() =>
         .optional()
         .describe(
           'Text content of the last assistant message before stopping. ' +
-            'Avoids the need to read and parse the transcript file.',
+          'Avoids the need to read and parse the transcript file.',
         ),
     }),
   ),
@@ -560,7 +560,7 @@ export const SubagentStopHookInputSchema = lazySchema(() =>
         .optional()
         .describe(
           'Text content of the last assistant message before stopping. ' +
-            'Avoids the need to read and parse the transcript file.',
+          'Avoids the need to read and parse the transcript file.',
         ),
     }),
   ),
@@ -1163,7 +1163,7 @@ export const AgentDefinitionSchema = lazySchema(() =>
         .enum(['user', 'project', 'local'])
         .optional()
         .describe(
-          "Scope for auto-loading agent memory files. 'user' - ~/.claude/agent-memory/<agentType>/, 'project' - .claude/agent-memory/<agentType>/, 'local' - .claude/agent-memory-local/<agentType>/",
+          "Scope for auto-loading agent memory files. 'user' - ~/.miniClaude/agent-memory/<agentType>/, 'project' - .miniClaude/agent-memory/<agentType>/, 'local' - .miniClaude/agent-memory-local/<agentType>/",
         ),
       effort: z
         .union([z.enum(['low', 'medium', 'high', 'max']), z.number().int()])
@@ -1191,9 +1191,9 @@ export const SettingSourceSchema = lazySchema(() =>
     .enum(['user', 'project', 'local'])
     .describe(
       'Source for loading filesystem-based settings. ' +
-        "'user' - Global user settings (~/.claude/settings.json). " +
-        "'project' - Project settings (.claude/settings.json). " +
-        "'local' - Local settings (.claude/settings.local.json).",
+      "'user' - Global user settings (~/.miniClaude/settings.json). " +
+      "'project' - Project settings (.miniClaude/settings.json). " +
+      "'local' - Local settings (.miniClaude/settings.local.json).",
     ),
 )
 
@@ -1519,10 +1519,10 @@ export const SDKCompactBoundaryMessageSchema = lazySchema(() =>
         .optional()
         .describe(
           'Relink info for messagesToKeep. Loaders splice the preserved ' +
-            'segment at anchor_uuid (summary for suffix-preserving, ' +
-            'boundary for prefix-preserving partial compact) so resume ' +
-            'includes preserved content. Unset when compaction summarizes ' +
-            'everything (no messagesToKeep).',
+          'segment at anchor_uuid (summary for suffix-preserving, ' +
+          'boundary for prefix-preserving partial compact) so resume ' +
+          'includes preserved content. Unset when compaction summarizes ' +
+          'everything (no messagesToKeep).',
         ),
     }),
     uuid: UUIDPlaceholder(),

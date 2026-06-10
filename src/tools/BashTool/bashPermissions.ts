@@ -690,7 +690,7 @@ export function stripWrappersFromArgv(argv: string[]): string[] {
   // wrapper does. Otherwise `['nohup','--','rm','--','-/../foo']` yields `--`
   // as baseCmd and skips path validation. See SAFE_WRAPPER_PATTERNS comment.
   let a = argv
-  for (;;) {
+  for (; ;) {
     if (a[0] === 'time' || a[0] === 'nohup') {
       a = a.slice(a[1] === '--' ? 2 : 1)
     } else if (a[0] === 'timeout') {
@@ -1568,7 +1568,7 @@ export function startSpeculativeClassifierCheck(
   )
   // Prevent unhandled rejection if the signal aborts before this promise is consumed.
   // The original promise (which may reject) is still stored in the Map for consumers to await.
-  promise.catch(() => {})
+  promise.catch(() => { })
   speculativeChecks.set(command, promise)
   return true
 }
@@ -1609,13 +1609,13 @@ export async function awaitClassifierAutoApproval(
   const classifierResult = speculativeResult
     ? await speculativeResult
     : await classifyBashCommand(
-        command,
-        cwd,
-        descriptions,
-        'allow',
-        signal,
-        isNonInteractiveSession,
-      )
+      command,
+      cwd,
+      descriptions,
+      'allow',
+      signal,
+      isNonInteractiveSession,
+    )
 
   logClassifierResultForAnts(command, 'allow', descriptions, classifierResult)
 
@@ -1663,13 +1663,13 @@ export async function executeAsyncClassifierCheck(
     classifierResult = speculativeResult
       ? await speculativeResult
       : await classifyBashCommand(
-          command,
-          cwd,
-          descriptions,
-          'allow',
-          signal,
-          isNonInteractiveSession,
-        )
+        command,
+        cwd,
+        descriptions,
+        'allow',
+        signal,
+        isNonInteractiveSession,
+      )
   } catch (error: unknown) {
     // When the coordinator session is cancelled, the abort signal fires and the
     // classifier API call rejects with APIUserAbortError. This is expected and
@@ -1806,11 +1806,11 @@ export async function bashToolHasPermission(
       suggestions: [],
       ...(feature('BASH_CLASSIFIER')
         ? {
-            pendingClassifierCheck: buildPendingClassifierCheck(
-              input.command,
-              appState.toolPermissionContext,
-            ),
-          }
+          pendingClassifierCheck: buildPendingClassifierCheck(
+            input.command,
+            appState.toolPermissionContext,
+          ),
+        }
         : {}),
     }
   }
@@ -1923,23 +1923,23 @@ export async function bashToolHasPermission(
       const [denyResult, askResult] = await Promise.all([
         hasDeny
           ? classifyBashCommand(
-              input.command,
-              getCwd(),
-              denyDescriptions,
-              'deny',
-              context.abortController.signal,
-              context.options.isNonInteractiveSession,
-            )
+            input.command,
+            getCwd(),
+            denyDescriptions,
+            'deny',
+            context.abortController.signal,
+            context.options.isNonInteractiveSession,
+          )
           : null,
         hasAsk
           ? classifyBashCommand(
-              input.command,
-              getCwd(),
-              askDescriptions,
-              'ask',
-              context.abortController.signal,
-              context.options.isNonInteractiveSession,
-            )
+            input.command,
+            getCwd(),
+            askDescriptions,
+            'ask',
+            context.abortController.signal,
+            context.options.isNonInteractiveSession,
+          )
           : null,
       ])
 
@@ -2006,11 +2006,11 @@ export async function bashToolHasPermission(
           suggestions,
           ...(feature('BASH_CLASSIFIER')
             ? {
-                pendingClassifierCheck: buildPendingClassifierCheck(
-                  input.command,
-                  appState.toolPermissionContext,
-                ),
-              }
+              pendingClassifierCheck: buildPendingClassifierCheck(
+                input.command,
+                appState.toolPermissionContext,
+              ),
+            }
             : {}),
         }
       }
@@ -2073,11 +2073,11 @@ export async function bashToolHasPermission(
           },
           ...(feature('BASH_CLASSIFIER')
             ? {
-                pendingClassifierCheck: buildPendingClassifierCheck(
-                  input.command,
-                  appState.toolPermissionContext,
-                ),
-              }
+              pendingClassifierCheck: buildPendingClassifierCheck(
+                input.command,
+                appState.toolPermissionContext,
+              ),
+            }
             : {}),
         }
       }
@@ -2086,9 +2086,9 @@ export async function bashToolHasPermission(
       // SECURITY: Compute compoundCommandHasCd from the full command, NOT
       // hardcode false. The pipe-handling path previously passed `false` here,
       // disabling the cd+redirect check at pathValidation.ts:821. Appending
-      // `| echo done` to `cd .claude && echo x > settings.json` routed through
+      // `| echo done` to `cd .miniClaude && echo x > settings.json` routed through
       // this path with compoundCommandHasCd=false, letting the redirect write
-      // to .claude/settings.json without the cd+redirect block firing.
+      // to .miniClaude/settings.json without the cd+redirect block firing.
       const pathResult = checkPathConstraints(
         input,
         getCwd(),
@@ -2110,11 +2110,11 @@ export async function bashToolHasPermission(
         ...commandOperatorResult,
         ...(feature('BASH_CLASSIFIER')
           ? {
-              pendingClassifierCheck: buildPendingClassifierCheck(
-                input.command,
-                appState.toolPermissionContext,
-              ),
-            }
+            pendingClassifierCheck: buildPendingClassifierCheck(
+              input.command,
+              appState.toolPermissionContext,
+            ),
+          }
           : {}),
       }
     }
@@ -2177,11 +2177,11 @@ export async function bashToolHasPermission(
           suggestions: [], // Don't suggest saving a potentially dangerous command
           ...(feature('BASH_CLASSIFIER')
             ? {
-                pendingClassifierCheck: buildPendingClassifierCheck(
-                  input.command,
-                  appState.toolPermissionContext,
-                ),
-              }
+              pendingClassifierCheck: buildPendingClassifierCheck(
+                input.command,
+                appState.toolPermissionContext,
+              ),
+            }
             : {}),
         }
       }
@@ -2243,7 +2243,7 @@ export async function bashToolHasPermission(
   }
 
   // Track if compound command contains cd for security validation
-  // This prevents bypassing path checks via: cd .claude/ && mv test.txt settings.json
+  // This prevents bypassing path checks via: cd .miniClaude/ && mv test.txt settings.json
   const compoundCommandHasCd = cdCommands.length > 0
 
   // SECURITY: Block compound commands that have both cd AND git
@@ -2368,11 +2368,11 @@ export async function bashToolHasPermission(
       ...askSubresult,
       ...(feature('BASH_CLASSIFIER')
         ? {
-            pendingClassifierCheck: buildPendingClassifierCheck(
-              input.command,
-              appState.toolPermissionContext,
-            ),
-          }
+          pendingClassifierCheck: buildPendingClassifierCheck(
+            input.command,
+            appState.toolPermissionContext,
+          ),
+        }
         : {}),
     }
   }
@@ -2467,11 +2467,11 @@ export async function bashToolHasPermission(
         ...result,
         ...(feature('BASH_CLASSIFIER')
           ? {
-              pendingClassifierCheck: buildPendingClassifierCheck(
-                input.command,
-                appState.toolPermissionContext,
-              ),
-            }
+            pendingClassifierCheck: buildPendingClassifierCheck(
+              input.command,
+              appState.toolPermissionContext,
+            ),
+          }
           : {}),
       }
     }
@@ -2574,13 +2574,13 @@ export async function bashToolHasPermission(
   const suggestedUpdates: PermissionUpdate[] | undefined =
     cappedRules.length > 0
       ? [
-          {
-            type: 'addRules',
-            rules: cappedRules,
-            behavior: 'allow',
-            destination: 'localSettings',
-          },
-        ]
+        {
+          type: 'addRules',
+          rules: cappedRules,
+          behavior: 'allow',
+          destination: 'localSettings',
+        },
+      ]
       : undefined
 
   // Attach pending classifier check - may auto-approve before user responds.
@@ -2594,11 +2594,11 @@ export async function bashToolHasPermission(
     suggestions: suggestedUpdates,
     ...(feature('BASH_CLASSIFIER')
       ? {
-          pendingClassifierCheck: buildPendingClassifierCheck(
-            input.command,
-            appState.toolPermissionContext,
-          ),
-        }
+        pendingClassifierCheck: buildPendingClassifierCheck(
+          input.command,
+          appState.toolPermissionContext,
+        ),
+      }
       : {}),
   }
 }

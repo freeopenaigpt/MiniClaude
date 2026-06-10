@@ -137,10 +137,10 @@ export function attachErrorLogSink(newSink: ErrorLogSink): void {
  * Logs an error to multiple destinations for debugging and monitoring.
  *
  * This function logs errors to:
- * - Debug logs (visible via `claude --debug` or `tail -f ~/.claude/debug/latest`)
+ * - Debug logs (visible via `claude --debug` or `tail -f ~/.miniClaude/debug/latest`)
  * - In-memory error log (accessible via `getInMemoryErrors()`, useful for including
  *   in bug reports or displaying recent errors to users)
- * - Persistent error log file (only for internal 'ant' users, stored in ~/.claude/errors/)
+ * - Persistent error log file (only for internal 'ant' users, stored in ~/.miniClaude/errors/)
  *
  * Usage:
  * ```ts
@@ -148,7 +148,7 @@ export function attachErrorLogSink(newSink: ErrorLogSink): void {
  * ```
  *
  * To view errors:
- * - Debug: Run `claude --debug` or `tail -f ~/.claude/debug/latest`
+ * - Debug: Run `claude --debug` or `tail -f ~/.miniClaude/debug/latest`
  * - In-memory: Call `getInMemoryErrors()` to get recent errors for the current session
  */
 const isHardFailMode = memoize((): boolean => {
@@ -241,7 +241,7 @@ async function loadLogList(path: string): Promise<LogOption[]> {
       const lastMessage = messages[messages.length - 1]
       const firstPrompt =
         firstMessage?.type === 'user' &&
-        typeof firstMessage?.message?.content === 'string'
+          typeof firstMessage?.message?.content === 'string'
           ? firstMessage?.message?.content
           : 'No prompt'
 
@@ -265,7 +265,7 @@ async function loadLogList(path: string): Promise<LogOption[]> {
           : parseISOString(date),
         firstPrompt:
           firstPrompt.split('\n')[0]?.slice(0, 50) +
-            (firstPrompt.length > 50 ? '…' : '') || 'No prompt',
+          (firstPrompt.length > 50 ? '…' : '') || 'No prompt',
         messageCount: messages.length,
         isSidechain,
       }

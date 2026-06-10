@@ -298,11 +298,11 @@ export function getExtraBodyParams(): JsonObject {
   if (
     feature('ANTI_DISTILLATION_CC')
       ? process.env.CLAUDE_CODE_ENTRYPOINT === 'cli' &&
-        shouldIncludeFirstPartyOnlyBetas() &&
-        getFeatureValue_CACHED_MAY_BE_STALE(
-          'tengu_anti_distill_fake_tool_injection',
-          false,
-        )
+      shouldIncludeFirstPartyOnlyBetas() &&
+      getFeatureValue_CACHED_MAY_BE_STALE(
+        'tengu_anti_distill_fake_tool_injection',
+        false,
+      )
       : false
   ) {
     result.anti_distillation = ['fake_tools']
@@ -649,9 +649,9 @@ export function assistantMessageToMessageParam(
         content: message.message.content.map((_, i) => ({
           ..._,
           ...(i === message.message.content.length - 1 &&
-          _.type !== 'thinking' &&
-          _.type !== 'redacted_thinking' &&
-          (feature('CONNECTOR_TEXT') ? !isConnectorTextBlock(_) : true)
+            _.type !== 'thinking' &&
+            _.type !== 'redacted_thinking' &&
+            (feature('CONNECTOR_TEXT') ? !isConnectorTextBlock(_) : true)
             ? enablePromptCaching
               ? { cache_control: getCacheControl({ querySource }) }
               : {}
@@ -1001,9 +1001,9 @@ export function stripExcessMediaItems(
     return before === toRemove
       ? msg
       : {
-          ...msg,
-          message: { ...msg.message, content: stripped },
-        }
+        ...msg,
+        message: { ...msg.message, content: stripped },
+      }
   }) as (UserMessage | AssistantMessage)[]
 }
 
@@ -1473,10 +1473,10 @@ async function* queryModel(
 
   const newContext: LLMRequestNewContext | undefined = isBetaTracingEnabled()
     ? {
-        systemPrompt: systemPrompt.join('\n\n'),
-        querySource: options.querySource,
-        tools: jsonStringify(allTools),
-      }
+      systemPrompt: systemPrompt.join('\n\n'),
+      querySource: options.querySource,
+      tools: jsonStringify(allTools),
+    }
     : undefined
 
   // Capture the span so we can pass it to endLLMRequestSpan later
@@ -1506,7 +1506,7 @@ async function* queryModel(
     cleanupStream(stream)
     stream = undefined
     if (streamResponse) {
-      streamResponse.body?.cancel().catch(() => {})
+      streamResponse.body?.cancel().catch(() => { })
       streamResponse = undefined
     }
   }
@@ -1696,8 +1696,8 @@ async function* queryModel(
       ...(contextManagement &&
         useBetas &&
         betasParams.includes(CONTEXT_MANAGEMENT_BETA_HEADER) && {
-          context_management: contextManagement,
-        }),
+        context_management: contextManagement,
+      }),
       ...extraBodyParams,
       ...(Object.keys(outputConfig).length > 0 && {
         output_config: outputConfig,
@@ -2246,9 +2246,8 @@ async function* queryModel(
                 max_tokens: maxOutputTokens,
               })
               yield createAssistantAPIErrorMessage({
-                content: `${API_ERROR_MESSAGE_PREFIX}: Claude's response exceeded the ${
-                  maxOutputTokens
-                } output token maximum. To configure this behavior, set the CLAUDE_CODE_MAX_OUTPUT_TOKENS environment variable.`,
+                content: `${API_ERROR_MESSAGE_PREFIX}: Claude's response exceeded the ${maxOutputTokens
+                  } output token maximum. To configure this behavior, set the CLAUDE_CODE_MAX_OUTPUT_TOKENS environment variable.`,
                 apiError: 'max_output_tokens',
                 error: 'max_output_tokens',
               })
@@ -2463,8 +2462,8 @@ async function* queryModel(
             streamingError instanceof Error
               ? (streamingError.name as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS)
               : (String(
-                  streamingError,
-                ) as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS),
+                streamingError,
+              ) as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS),
           attemptNumber,
           maxOutputTokens,
           thinkingType:
@@ -2495,8 +2494,8 @@ async function* queryModel(
           streamingError instanceof Error
             ? (streamingError.name as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS)
             : (String(
-                streamingError,
-              ) as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS),
+              streamingError,
+            ) as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS),
         attemptNumber,
         maxOutputTokens,
         thinkingType:
@@ -2561,8 +2560,8 @@ async function* queryModel(
         timestamp: new Date().toISOString(),
         ...(process.env.USER_TYPE === 'ant' &&
           research !== undefined && {
-            research,
-          }),
+          research,
+        }),
         ...(advisorModel && {
           advisorModel,
         }),
@@ -2913,12 +2912,12 @@ export function updateUsage(
         : usage.input_tokens,
     cache_creation_input_tokens:
       partUsage.cache_creation_input_tokens !== null &&
-      partUsage.cache_creation_input_tokens > 0
+        partUsage.cache_creation_input_tokens > 0
         ? partUsage.cache_creation_input_tokens
         : usage.cache_creation_input_tokens,
     cache_read_input_tokens:
       partUsage.cache_read_input_tokens !== null &&
-      partUsage.cache_read_input_tokens > 0
+        partUsage.cache_read_input_tokens > 0
         ? partUsage.cache_read_input_tokens
         : usage.cache_read_input_tokens,
     output_tokens: partUsage.output_tokens ?? usage.output_tokens,
@@ -2947,16 +2946,16 @@ export function updateUsage(
     // from overwriting the real value with 0.
     ...(feature('CACHED_MICROCOMPACT')
       ? {
-          cache_deleted_input_tokens:
-            (partUsage as unknown as { cache_deleted_input_tokens?: number })
-              .cache_deleted_input_tokens != null &&
+        cache_deleted_input_tokens:
+          (partUsage as unknown as { cache_deleted_input_tokens?: number })
+            .cache_deleted_input_tokens != null &&
             (partUsage as unknown as { cache_deleted_input_tokens: number })
               .cache_deleted_input_tokens > 0
-              ? (partUsage as unknown as { cache_deleted_input_tokens: number })
-                  .cache_deleted_input_tokens
-              : ((usage as unknown as { cache_deleted_input_tokens?: number })
-                  .cache_deleted_input_tokens ?? 0),
-        }
+            ? (partUsage as unknown as { cache_deleted_input_tokens: number })
+              .cache_deleted_input_tokens
+            : ((usage as unknown as { cache_deleted_input_tokens?: number })
+              .cache_deleted_input_tokens ?? 0),
+      }
       : {}),
     inference_geo: usage.inference_geo,
     iterations: partUsage.iterations ?? usage.iterations,
@@ -3001,13 +3000,13 @@ export function accumulateUsage(
     // the string out of external builds.
     ...(feature('CACHED_MICROCOMPACT')
       ? {
-          cache_deleted_input_tokens:
-            ((totalUsage as unknown as { cache_deleted_input_tokens?: number })
-              .cache_deleted_input_tokens ?? 0) +
-            ((
-              messageUsage as unknown as { cache_deleted_input_tokens?: number }
-            ).cache_deleted_input_tokens ?? 0),
-        }
+        cache_deleted_input_tokens:
+          ((totalUsage as unknown as { cache_deleted_input_tokens?: number })
+            .cache_deleted_input_tokens ?? 0) +
+          ((
+            messageUsage as unknown as { cache_deleted_input_tokens?: number }
+          ).cache_deleted_input_tokens ?? 0),
+      }
       : {}),
     inference_geo: messageUsage.inference_geo, // Use the most recent
     iterations: messageUsage.iterations, // Use the most recent
@@ -3205,11 +3204,11 @@ export function buildSystemPromptBlocks(
       text: block.text,
       ...(enablePromptCaching &&
         block.cacheScope !== null && {
-          cache_control: getCacheControl({
-            scope: block.cacheScope,
-            querySource: options?.querySource,
-          }),
+        cache_control: getCacheControl({
+          scope: block.cacheScope,
+          querySource: options?.querySource,
         }),
+      }),
     }
   })
 }
@@ -3326,7 +3325,7 @@ export async function queryWithModel({
 }
 
 // Non-streaming requests have a 10min max per the docs:
-// https://platform.claude.com/docs/en/api/errors#long-requests
+// https://platform.miniClaude.com/docs/en/api/errors#long-requests
 // The SDK's 21333-token cap is derived from 10min × 128k tokens/hour, but we
 // bypass it by setting a client-level timeout, so we can cap higher.
 export const MAX_NON_STREAMING_TOKENS = 64_000

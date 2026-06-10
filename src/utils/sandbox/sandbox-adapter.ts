@@ -240,18 +240,18 @@ export function convertToSandboxRuntimeConfig(
   const cwd = getCwdState()
   const originalCwd = getOriginalCwd()
   if (cwd !== originalCwd) {
-    denyWrite.push(resolve(cwd, '.claude', 'settings.json'))
-    denyWrite.push(resolve(cwd, '.claude', 'settings.local.json'))
+    denyWrite.push(resolve(cwd, '.miniClaude', 'settings.json'))
+    denyWrite.push(resolve(cwd, '.miniClaude', 'settings.local.json'))
   }
 
-  // Block writes to .claude/skills in both original and current working directories.
-  // The sandbox-runtime's getDangerousDirectories() protects .claude/commands and
-  // .claude/agents but not .claude/skills. Skills have the same privilege level
+  // Block writes to .miniClaude/skills in both original and current working directories.
+  // The sandbox-runtime's getDangerousDirectories() protects .miniClaude/commands and
+  // .miniClaude/agents but not .miniClaude/skills. Skills have the same privilege level
   // (auto-discovered, auto-loaded, full Claude capabilities) so they need the
   // same OS-level sandbox protection.
-  denyWrite.push(resolve(originalCwd, '.claude', 'skills'))
+  denyWrite.push(resolve(originalCwd, '.miniClaude', 'skills'))
   if (cwd !== originalCwd) {
-    denyWrite.push(resolve(cwd, '.claude', 'skills'))
+    denyWrite.push(resolve(cwd, '.miniClaude', 'skills'))
   }
 
   // SECURITY: Git's is_git_directory() treats cwd as a bare repo if it has
@@ -744,14 +744,14 @@ async function initialize(
   // This ensures all code paths (REPL, print/SDK) are covered.
   const wrappedCallback: SandboxAskCallback | undefined = sandboxAskCallback
     ? async (hostPattern: NetworkHostPattern) => {
-        if (shouldAllowManagedSandboxDomainsOnly()) {
-          logForDebugging(
-            `[sandbox] Blocked network request to ${hostPattern.host} (allowManagedDomainsOnly)`,
-          )
-          return false
-        }
-        return sandboxAskCallback(hostPattern)
+      if (shouldAllowManagedSandboxDomainsOnly()) {
+        logForDebugging(
+          `[sandbox] Blocked network request to ${hostPattern.host} (allowManagedDomainsOnly)`,
+        )
+        return false
       }
+      return sandboxAskCallback(hostPattern)
+    }
     : undefined
 
   // Create the initialization promise synchronously (before any await) to prevent

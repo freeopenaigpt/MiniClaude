@@ -30,8 +30,8 @@ export type Props = {
   /**
    * When true, skip writing effortLevel to userSettings on selection.
    * Used by the assistant installer wizard where the model choice is
-   * project-scoped (written to the assistant's .claude/settings.json via
-   * install.ts) and should not leak to the user's global ~/.claude/settings.
+   * project-scoped (written to the assistant's .miniClaude/settings.json via
+   * install.ts) and should not leak to the user's global ~/.miniClaude/settings.
    */
   skipSettingsWrite?: boolean;
 };
@@ -385,7 +385,7 @@ export function ModelPicker(t0) {
   }
   return t29;
 }
-function _temp4() {}
+function _temp4() { }
 function _temp3(opt_0) {
   return {
     ...opt_0,

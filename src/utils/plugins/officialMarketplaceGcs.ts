@@ -26,7 +26,7 @@ type SafeString = AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS
 // `latest` has Cache-Control: max-age=300 so CDN staleness is bounded.
 // Backend (anthropic#317037) populates this prefix.
 const GCS_BASE =
-  'https://downloads.claude.ai/claude-code-releases/plugins/claude-plugins-official'
+  'https://downloads.miniClaude.ai/claude-code-releases/plugins/claude-plugins-official'
 
 // Zip arc paths are seed-dir-relative (marketplaces/claude-plugins-official/…)
 // so the titanium seed machinery can use the same zip. Strip this prefix when
@@ -132,7 +132,7 @@ export async function fetchOfficialMarketplaceFromGcs(
         // Only chmod when an exec bit is set — skip plain files to save syscalls.
         // Swallow EPERM/ENOTSUP (NFS root_squash, some FUSE mounts) — losing +x
         // is the pre-PR behavior and better than aborting mid-extraction.
-        await chmod(dest, mode & 0o777).catch(() => {})
+        await chmod(dest, mode & 0o777).catch(() => { })
       }
     }
     await writeFile(join(staging, '.gcs-sha'), sha)
@@ -158,7 +158,7 @@ export async function fetchOfficialMarketplaceFromGcs(
     // values below are static enums or a git SHA — not code/filepaths/PII.
     logEvent('tengu_plugin_remote_fetch', {
       source: 'marketplace_gcs' as SafeString,
-      host: 'downloads.claude.ai' as SafeString,
+      host: 'downloads.miniClaude.ai' as SafeString,
       is_official: true,
       outcome: outcome as SafeString,
       duration_ms: Math.round(performance.now() - start),

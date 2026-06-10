@@ -144,13 +144,13 @@ async function appendAsync(
   content: string,
 ): Promise<void> {
   if (needMkdir) {
-    await mkdir(dir, { recursive: true }).catch(() => {})
+    await mkdir(dir, { recursive: true }).catch(() => { })
   }
   await appendFile(path, content)
   void updateLatestDebugLogSymlink()
 }
 
-function noop(): void {}
+function noop(): void { }
 
 function getDebugWriter(): BufferedWriter {
   if (!debugWriter) {
@@ -237,7 +237,7 @@ export function getDebugLogPath(): string {
 
 /**
  * Updates the latest debug log symlink to point to the current debug log file.
- * Creates or updates a symlink at ~/.claude/debug/latest
+ * Creates or updates a symlink at ~/.miniClaude/debug/latest
  */
 const updateLatestDebugLogSymlink = memoize(async (): Promise<void> => {
   try {
@@ -245,7 +245,7 @@ const updateLatestDebugLogSymlink = memoize(async (): Promise<void> => {
     const debugLogsDir = dirname(debugLogPath)
     const latestSymlinkPath = join(debugLogsDir, 'latest')
 
-    await unlink(latestSymlinkPath).catch(() => {})
+    await unlink(latestSymlinkPath).catch(() => { })
     await symlink(debugLogPath, latestSymlinkPath)
   } catch {
     // Silently fail if symlink creation fails

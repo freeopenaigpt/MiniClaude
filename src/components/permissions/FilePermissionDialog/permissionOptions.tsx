@@ -9,31 +9,31 @@ import { expandPath, getDirectoryForPath } from '../../../utils/path.js';
 import { normalizeCaseForComparison, pathInAllowedWorkingPath } from '../../../utils/permissions/filesystem.js';
 import type { OptionWithDescription } from '../../CustomSelect/select.js';
 /**
- * Check if a path is within the project's .claude/ folder.
- * This is used to determine whether to show the special ".claude folder" permission option.
+ * Check if a path is within the project's .miniClaude/ folder.
+ * This is used to determine whether to show the special ".miniClaude folder" permission option.
  */
 export function isInClaudeFolder(filePath: string): boolean {
   const absolutePath = expandPath(filePath);
-  const claudeFolderPath = expandPath(`${getOriginalCwd()}/.claude`);
+  const claudeFolderPath = expandPath(`${getOriginalCwd()}/.miniClaude`);
 
-  // Check if the path is within the project's .claude folder
+  // Check if the path is within the project's .miniClaude folder
   const normalizedAbsolutePath = normalizeCaseForComparison(absolutePath);
   const normalizedClaudeFolderPath = normalizeCaseForComparison(claudeFolderPath);
 
-  // Path must start with the .claude folder path (and be inside it, not just the folder itself)
+  // Path must start with the .miniClaude folder path (and be inside it, not just the folder itself)
   return normalizedAbsolutePath.startsWith(normalizedClaudeFolderPath + sep.toLowerCase()) ||
-  // Also match case where sep is / on posix systems
-  normalizedAbsolutePath.startsWith(normalizedClaudeFolderPath + '/');
+    // Also match case where sep is / on posix systems
+    normalizedAbsolutePath.startsWith(normalizedClaudeFolderPath + '/');
 }
 
 /**
- * Check if a path is within the global ~/.claude/ folder.
- * This is used to determine whether to show the special ".claude folder" permission option
+ * Check if a path is within the global ~/.miniClaude/ folder.
+ * This is used to determine whether to show the special ".miniClaude folder" permission option
  * for files in the user's home directory.
  */
 export function isInGlobalClaudeFolder(filePath: string): boolean {
   const absolutePath = expandPath(filePath);
-  const globalClaudeFolderPath = join(homedir(), '.claude');
+  const globalClaudeFolderPath = join(homedir(), '.miniClaude');
   const normalizedAbsolutePath = normalizeCaseForComparison(absolutePath);
   const normalizedGlobalClaudeFolderPath = normalizeCaseForComparison(globalClaudeFolderPath);
   return normalizedAbsolutePath.startsWith(normalizedGlobalClaudeFolderPath + sep.toLowerCase()) || normalizedAbsolutePath.startsWith(normalizedGlobalClaudeFolderPath + '/');
@@ -94,11 +94,11 @@ export function getFilePermissionOptions({
   }
   const inAllowedPath = pathInAllowedWorkingPath(filePath, toolPermissionContext);
 
-  // Check if this is a .claude/ folder path (project or global)
+  // Check if this is a .miniClaude/ folder path (project or global)
   const inClaudeFolder = isInClaudeFolder(filePath);
   const inGlobalClaudeFolder = isInGlobalClaudeFolder(filePath);
 
-  // Option 2: For .claude/ folder, show special option instead of generic session option
+  // Option 2: For .miniClaude/ folder, show special option instead of generic session option
   // Note: Session-level options are always shown since they only affect in-memory state,
   // not persisted settings. The allowManagedPermissionRulesOnly setting only restricts
   // persisted permission rules.
@@ -120,9 +120,9 @@ export function getFilePermissionOptions({
         sessionLabel = 'Yes, during this session';
       } else {
         sessionLabel = <Text>
-            Yes, allow all edits during this session{' '}
-            <Text bold>({modeCycleShortcut})</Text>
-          </Text>;
+          Yes, allow all edits during this session{' '}
+          <Text bold>({modeCycleShortcut})</Text>
+        </Text>;
       }
     } else {
       // Outside working directory - include directory name
@@ -130,14 +130,14 @@ export function getFilePermissionOptions({
       const dirName = basename(dirPath) || 'this directory';
       if (operationType === 'read') {
         sessionLabel = <Text>
-            Yes, allow reading from <Text bold>{dirName}/</Text> during this
-            session
-          </Text>;
+          Yes, allow reading from <Text bold>{dirName}/</Text> during this
+          session
+        </Text>;
       } else {
         sessionLabel = <Text>
-            Yes, allow all edits in <Text bold>{dirName}/</Text> during this
-            session <Text bold>({modeCycleShortcut})</Text>
-          </Text>;
+          Yes, allow all edits in <Text bold>{dirName}/</Text> during this
+          session <Text bold>({modeCycleShortcut})</Text>
+        </Text>;
       }
     }
     options.push({

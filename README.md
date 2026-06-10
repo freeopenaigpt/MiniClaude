@@ -55,11 +55,11 @@ bun run build
 
 ### 配置文件
 
-MiniClaude 完全兼容 Claude Code 的配置体系，主推在 `~/.claude/settings.json` 中集中管理。
+MiniClaude 完全兼容 Claude Code 的配置体系，主推在 `~/.miniClaude/settings.json` 中集中管理。
 
 | 配置方式 | 路径 | 适用场景 |
 |----------|------|----------|
-| **settings.json（推荐）** | `~/.claude/settings.json` | 全局配置，多 Provider 热切换 |
+| **settings.json（推荐）** | `~/.miniClaude/settings.json` | 全局配置，多 Provider 热切换 |
 | **.env** | 项目根目录 `.env` | 开发调试，临时覆盖 |
 
 **推荐：settings.json**
@@ -67,9 +67,9 @@ MiniClaude 完全兼容 Claude Code 的配置体系，主推在 `~/.claude/setti
 复制模板并编辑：
 
 ```bash
-cp settings.example.json ~/.claude/settings.json
-# Linux/macOS: ~/.claude/settings.json
-# Windows:     C:\Users\<用户名>\.claude\settings.json
+cp settings.example.json ~/.miniClaude/settings.json
+# Linux/macOS: ~/.miniClaude/settings.json
+# Windows:     C:\Users\<用户名>\.miniClaude\settings.json
 ```
 
 最简配置（DeepSeek 为例）：

@@ -13,8 +13,8 @@
 
 export const PREAPPROVED_HOSTS = new Set([
   // Anthropic
-  'platform.claude.com',
-  'code.claude.com',
+  'platform.miniClaude.com',
+  'code.miniClaude.com',
   'modelcontextprotocol.io',
   'github.com/anthropics',
   'agentskills.io',

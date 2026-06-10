@@ -67,18 +67,18 @@ function MemoryCommand({
     });
   };
   return <Dialog title="Memory" onCancel={handleCancel} color="remember">
-      <Box flexDirection="column">
-        <React.Suspense fallback={null}>
-          <MemoryFileSelector onSelect={handleSelectMemoryFile} onCancel={handleCancel} />
-        </React.Suspense>
+    <Box flexDirection="column">
+      <React.Suspense fallback={null}>
+        <MemoryFileSelector onSelect={handleSelectMemoryFile} onCancel={handleCancel} />
+      </React.Suspense>
 
-        <Box marginTop={1}>
-          <Text dimColor>
-            Learn more: <Link url="https://code.claude.com/docs/en/memory" />
-          </Text>
-        </Box>
+      <Box marginTop={1}>
+        <Text dimColor>
+          Learn more: <Link url="https://code.miniClaude.com/docs/en/memory" />
+        </Text>
       </Box>
-    </Dialog>;
+    </Box>
+  </Dialog>;
 }
 export const call: LocalJSXCommandCall = async onDone => {
   // Clear + prime before rendering — Suspense handles the unprimed case,

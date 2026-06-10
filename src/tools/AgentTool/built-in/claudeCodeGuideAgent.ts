@@ -15,8 +15,8 @@ import type {
 } from '../loadAgentsDir.js'
 
 const CLAUDE_CODE_DOCS_MAP_URL =
-  'https://code.claude.com/docs/en/claude_code_docs_map.md'
-const CDP_DOCS_MAP_URL = 'https://platform.claude.com/llms.txt'
+  'https://code.miniClaude.com/docs/en/claude_code_docs_map.md'
+const CDP_DOCS_MAP_URL = 'https://platform.miniClaude.com/llms.txt'
 
 export const CLAUDE_CODE_GUIDE_AGENT_TYPE = 'claude-code-guide'
 
@@ -73,7 +73,7 @@ function getClaudeCodeGuideBasePrompt(): string {
 4. Fetch the specific documentation pages
 5. Provide clear, actionable guidance based on official documentation
 6. Use ${WEB_SEARCH_TOOL_NAME} if docs don't cover the topic
-7. Reference local project files (CLAUDE.md, .claude/ directory) when relevant using ${localSearchHint}
+7. Reference local project files (CLAUDE.md, .miniClaude/ directory) when relevant using ${localSearchHint}
 
 **Guidelines:**
 - Always prioritize official documentation over assumptions
@@ -96,18 +96,18 @@ export const CLAUDE_CODE_GUIDE_AGENT: BuiltInAgentDefinition = {
   // bfs/ugrep via find/grep aliases) for local file search instead.
   tools: hasEmbeddedSearchTools()
     ? [
-        BASH_TOOL_NAME,
-        FILE_READ_TOOL_NAME,
-        WEB_FETCH_TOOL_NAME,
-        WEB_SEARCH_TOOL_NAME,
-      ]
+      BASH_TOOL_NAME,
+      FILE_READ_TOOL_NAME,
+      WEB_FETCH_TOOL_NAME,
+      WEB_SEARCH_TOOL_NAME,
+    ]
     : [
-        GLOB_TOOL_NAME,
-        GREP_TOOL_NAME,
-        FILE_READ_TOOL_NAME,
-        WEB_FETCH_TOOL_NAME,
-        WEB_SEARCH_TOOL_NAME,
-      ],
+      GLOB_TOOL_NAME,
+      GREP_TOOL_NAME,
+      FILE_READ_TOOL_NAME,
+      WEB_FETCH_TOOL_NAME,
+      WEB_SEARCH_TOOL_NAME,
+    ],
   source: 'built-in',
   baseDir: 'built-in',
   model: 'haiku',
@@ -129,7 +129,7 @@ export const CLAUDE_CODE_GUIDE_AGENT: BuiltInAgentDefinition = {
       )
     }
 
-    // 2. Custom agents from .claude/agents/
+    // 2. Custom agents from .miniClaude/agents/
     const customAgents =
       toolUseContext.options.agentDefinitions.activeAgents.filter(
         (a: AgentDefinition) => a.source !== 'built-in',

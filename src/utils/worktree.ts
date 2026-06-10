@@ -51,7 +51,7 @@ const MAX_WORKTREE_SLUG_LENGTH = 64
 /**
  * Validates a worktree slug to prevent path traversal and directory escape.
  *
- * The slug is joined into `.claude/worktrees/<slug>` via path.join, which
+ * The slug is joined into `.miniClaude/worktrees/<slug>` via path.join, which
  * normalizes `..` segments — so `../../../target` would escape the worktrees
  * directory. Similarly, an absolute path (leading `/` or `C:\`) would discard
  * the prefix entirely.
@@ -179,18 +179,18 @@ export function generateTmuxSessionName(
 
 type WorktreeCreateResult =
   | {
-      worktreePath: string
-      worktreeBranch: string
-      headCommit: string
-      existed: true
-    }
+    worktreePath: string
+    worktreeBranch: string
+    headCommit: string
+    existed: true
+  }
   | {
-      worktreePath: string
-      worktreeBranch: string
-      headCommit: string
-      baseBranch: string
-      existed: false
-    }
+    worktreePath: string
+    worktreeBranch: string
+    headCommit: string
+    baseBranch: string
+    existed: false
+  }
 
 // Env vars to prevent git/SSH from prompting for credentials (which hangs the CLI).
 // GIT_TERMINAL_PROMPT=0 prevents git from opening /dev/tty for credential prompts.
@@ -202,14 +202,14 @@ const GIT_NO_PROMPT_ENV = {
 }
 
 function worktreesDir(repoRoot: string): string {
-  return join(repoRoot, '.claude', 'worktrees')
+  return join(repoRoot, '.miniClaude', 'worktrees')
 }
 
 // Flatten nested slugs (`user/feature` → `user+feature`) for both the branch
 // name and the directory path. Nesting in either location is unsafe:
 //   - git refs: `worktree-user` (file) vs `worktree-user/feature` (needs dir)
 //     is a D/F conflict that git rejects.
-//   - directory: `.claude/worktrees/user/feature/` lives inside the `user`
+//   - directory: `.miniClaude/worktrees/user/feature/` lives inside the `user`
 //     worktree; `git worktree remove` on the parent deletes children with
 //     uncommitted work.
 // `+` is valid in git branch names and filesystem paths but NOT in the
@@ -511,7 +511,7 @@ async function performPostCreationSetup(
   repoRoot: string,
   worktreePath: string,
 ): Promise<void> {
-  // Copy settings.local.json to the worktree's .claude directory
+  // Copy settings.local.json to the worktree's .miniClaude directory
   // This propagates local settings (which may contain secrets) to the worktree
   const localSettingsRelativePath =
     getRelativeSettingsFilePathForSource('localSettings')
@@ -732,7 +732,7 @@ export async function createWorktreeForSession(
     if (!gitRoot) {
       throw new Error(
         'Cannot create a worktree: not in a git repository and no WorktreeCreate hooks are configured. ' +
-          'Configure WorktreeCreate/WorktreeRemove hooks in settings.json to use worktree isolation with other VCS systems.',
+        'Configure WorktreeCreate/WorktreeRemove hooks in settings.json to use worktree isolation with other VCS systems.',
       )
     }
 
@@ -920,14 +920,14 @@ export async function createAgentWorktree(slug: string): Promise<{
 
   // Fall back to git worktree
   // findCanonicalGitRoot (not findGitRoot) so agent worktrees always land in
-  // the main repo's .claude/worktrees/ even when spawned from inside a session
-  // worktree — otherwise they nest at <worktree>/.claude/worktrees/ and the
+  // the main repo's .miniClaude/worktrees/ even when spawned from inside a session
+  // worktree — otherwise they nest at <worktree>/.miniClaude/worktrees/ and the
   // periodic cleanup (which scans the canonical root) never finds them.
   const gitRoot = findCanonicalGitRoot(getCwd())
   if (!gitRoot) {
     throw new Error(
       'Cannot create agent worktree: not in a git repository and no WorktreeCreate hooks are configured. ' +
-        'Configure WorktreeCreate/WorktreeRemove hooks in settings.json to use worktree isolation with other VCS systems.',
+      'Configure WorktreeCreate/WorktreeRemove hooks in settings.json to use worktree isolation with other VCS systems.',
     )
   }
 
@@ -1386,9 +1386,9 @@ export async function execIntoTmuxWorktree(args: string[]): Promise<{
     // biome-ignore lint/suspicious/noConsole: intentional user guidance
     console.log(
       `\n${y('╭─ iTerm2 Tip ────────────────────────────────────────────────────────╮')}\n` +
-        `${y('│')} To open as a tab instead of a new window:                           ${y('│')}\n` +
-        `${y('│')} iTerm2 > Settings > General > tmux > "Tabs in attaching window"     ${y('│')}\n` +
-        `${y('╰─────────────────────────────────────────────────────────────────────╯')}\n`,
+      `${y('│')} To open as a tab instead of a new window:                           ${y('│')}\n` +
+      `${y('│')} iTerm2 > Settings > General > tmux > "Tabs in attaching window"     ${y('│')}\n` +
+      `${y('╰─────────────────────────────────────────────────────────────────────╯')}\n`,
     )
   }
 
