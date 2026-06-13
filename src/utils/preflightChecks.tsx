@@ -15,6 +15,14 @@ export interface PreflightCheckResult {
   sslHint?: string;
 }
 async function checkEndpoints(): Promise<PreflightCheckResult> {
+  const {
+    isFirstPartyAnthropicBaseUrl
+  } = await import('./model/providers.js');
+  if (!isFirstPartyAnthropicBaseUrl()) {
+    return {
+      success: true
+    };
+  }
   try {
     const oauthConfig = getOauthConfig();
     const tokenUrl = new URL(oauthConfig.TOKEN_URL);
